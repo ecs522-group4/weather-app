@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
-
+import TopBar from "./TopBar";
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
 const ENDPOINT = "observations";
@@ -26,6 +26,7 @@ class Main extends Component {
 
     return (
       <div className={classes.container}>
+        <TopBar />
         <h1>Weather App</h1>
         <p>Weather: {isLoaded && currentWeather.weatherShort}</p>
         <p>Temperature: {isLoaded && currentWeather.tempC}</p>
