@@ -2,32 +2,34 @@ import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
 
 /* --- WEATHER API --- */
-const BASE_URL = "https://api.openweathermap.org/data/2.5/weather?";
-const KEY = process.env.REACT_APP_OPENWEATHER_KEY;
+const BASE_URL = "https://api.aerisapi.com";
+const ENDPOINT = "observations";
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET;
+const KEYS = `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`;
+const OPTIONS = `%format=json&filter=allstations&limit=1&${KEYS}`;
 
 class Main extends Component {
   state = {
-    lat: 51.5,
-    long: 0.12,
-    data: "",
+    lat: null,
+    long: null,
+    currentWeather: "",
     isLoaded: false
   };
 
   render() {
     const { classes } = this.props;
-    const { data, isLoaded } = this.state;
+    const { currentWeather, isLoaded } = this.state;
 
     return (
       <div className={classes.container}>
         <h1>Weather App</h1>
-        <p>Weather: {isLoaded && data.weather[0].main}</p>
+        <p>Weather: {isLoaded && currentWeather.weatherShort}</p>
+        <p>Temperature: {isLoaded && currentWeather.tempC}</p>
+        <p>Wind speed: {isLoaded && currentWeather.windKPH}</p>
         <p>
-          Temperature:
-          {isLoaded && (parseInt(data.main.temp) - 273.15).toFixed(2)}
-        </p>
-        <p>Wind speed: {isLoaded && data.wind.speed}</p>
-        <p>
-          Place: {isLoaded && data.name}, {isLoaded && data.sys.country}
+          Place: {isLoaded && currentWeather.cityName},{" "}
+          {isLoaded && currentWeather.countryName}
         </p>
         <button onClick={this.updateWeatherBasedOnLocation}>
           Get weather for my location
@@ -37,29 +39,55 @@ class Main extends Component {
   }
 
   async componentDidMount() {
-    this.fetchWeatherFromAPI();
+    this.fetchCurrentWeather();
   }
 
-  fetchWeatherFromAPI = async () => {
+  fetchCurrentWeather = async () => {
     const { lat, long } = this.state;
-    fetch(`${BASE_URL}lat=${lat}&lon=${long}&appid=${KEY}`)
+    const LOCATION = lat === null ? ":auto" : `${lat},${long}`;
+    fetch(`${BASE_URL}/${ENDPOINT}/${LOCATION}?${OPTIONS}`)
       .then(res => res.json())
-      .then(
-        result => {
-          this.setState({ data: result, isLoaded: true });
-        },
-        error => {
-          console.log(error);
-          this.setState({ data: error, isLoaded: true });
+      .then(result => {
+        if (!result.success) {
+          console.error("API call failed", result.error);
+        } else {
+          const currentWeather = {
+            placeName: result.response.place.name,
+            cityName: result.response.place.city,
+            countryName: result.response.place.country,
+            dateTime: result.response.obDateTime,
+            tempC: result.response.ob.tempC,
+            tempF: result.response.ob.tempF,
+            humidity: result.response.ob.humidity,
+            windKTS: result.response.ob.windSpeedKTS,
+            windKPH: result.response.ob.windSpeedKPH,
+            windMPH: result.response.ob.windSpeedMPH,
+            windDirDeg: result.response.ob.windDirDEG,
+            windDir: result.response.ob.windDir,
+            windGustKTS: result.response.ob.windGustKTS,
+            windGustKPH: result.response.ob.windGustKPH,
+            windGustMPH: result.response.ob.windGustMPH,
+            weather: result.response.ob.weather,
+            weatherShort: result.response.ob.weatherShort,
+            windchillC: result.response.ob.windchillC,
+            windchillF: result.response.ob.windchillF,
+            feelsLikeC: result.response.ob.feelsLikeC,
+            feelsLikeF: result.response.ob.feelsLikeF,
+            isDay: result.response.ob.isDay,
+            sunrise: result.response.ob.sunriseISO,
+            sunset: result.response.ob.sunsetISO,
+            skyCoverage: result.response.ob.sky
+          };
+          this.setState({ currentWeather, isLoaded: true });
         }
-      );
+      });
   };
 
   updateWeatherBasedOnLocation = async () => {
     navigator.geolocation.getCurrentPosition(
       pos => {
         this.setState({ lat: pos.coords.latitude, long: pos.coords.longitude });
-        this.fetchWeatherFromAPI();
+        this.fetchCurrentWeather();
       },
       err => {
         console.log(err);
