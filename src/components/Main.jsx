@@ -11,9 +11,12 @@ const OPTIONS = `%format=json&filter=allstations&limit=1&${KEYS}`;
 
 class Main extends Component {
   state = {
+    // Coordinates for query
     lat: null,
     long: null,
+    // Stores an bject with current weather information
     currentWeather: "",
+    // Indicates if we received the API data correctly
     isLoaded: false
   };
 
@@ -39,12 +42,18 @@ class Main extends Component {
   }
 
   async componentDidMount() {
+    // Fetch weather data as soon as we load the app
     this.fetchCurrentWeather();
   }
 
+  // This function queries the API, and if we receive a valid response we tidy it
+  // up and store it in the state
   fetchCurrentWeather = async () => {
     const { lat, long } = this.state;
+    // If coordinates have been set, query by GPS position. Otherwise use
+    // automatic position (retrieved by IP)
     const LOCATION = lat === null ? ":auto" : `${lat},${long}`;
+    // Fetch data from the API, sanitize it and store it.
     fetch(`${BASE_URL}/${ENDPOINT}/${LOCATION}?${OPTIONS}`)
       .then(res => res.json())
       .then(result => {
@@ -83,6 +92,8 @@ class Main extends Component {
       });
   };
 
+  // This function retrieves Users' position, then updates the state with the
+  // GPS data and queries the API.
   updateWeatherBasedOnLocation = async () => {
     navigator.geolocation.getCurrentPosition(
       pos => {
