@@ -129,11 +129,8 @@ const styles = createStyles({
   container: {
     display: "flex",
     flexDirection: "column",
-    width: "414px",
-    height: "736px",
     textAlign: "center",
-    margin: "0 auto",
-    backgroundColor: "#fafafa"
+    margin: "0 auto"
   }
 });
 
