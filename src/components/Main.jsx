@@ -3,19 +3,23 @@ import { createStyles, withStyles } from "@material-ui/core/styles";
 import TopBar from "./TopBar";
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
-const ENDPOINT = "observations";
+const FETCH_CURRENT = "observations";
+const FETCH_FORECAST = "forecasts";
 const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
 const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET;
 const KEYS = `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`;
-const OPTIONS = `%format=json&filter=allstations&limit=1&${KEYS}`;
+const OPTIONS_CURRENT = `%format=json&filter=allstations&limit=1&${KEYS}`;
+const OPTIONS_FORECAST = `format=json&filter=1hr&limit=23&${KEYS}`;
 
 class Main extends Component {
   state = {
     // Coordinates for query
     lat: null,
     long: null,
-    // Stores an bject with current weather information
+    // Stores an object with current weather information
     currentWeather: "",
+    // Stores an object with weather information for the next 23 hours
+    forecastWeather: "",
     // Indicates if we received the API data correctly
     isLoaded: false
   };
@@ -44,22 +48,23 @@ class Main extends Component {
 
   async componentDidMount() {
     // Fetch weather data as soon as we load the app
-    this.fetchCurrentWeather();
+    this.fetchWeatherFromAPI();
   }
 
-  // This function queries the API, and if we receive a valid response we tidy it
-  // up and store it in the state
-  fetchCurrentWeather = async () => {
+  // This function queries the API, and if we receive a valid response we tidy
+  // it up and store it in the state
+  fetchWeatherFromAPI = async () => {
     const { lat, long } = this.state;
     // If coordinates have been set, query by GPS position. Otherwise use
     // automatic position (retrieved by IP)
     const LOCATION = lat === null ? ":auto" : `${lat},${long}`;
     // Fetch data from the API, sanitize it and store it.
-    fetch(`${BASE_URL}/${ENDPOINT}/${LOCATION}?${OPTIONS}`)
+    // Fetch current weather
+    fetch(`${BASE_URL}/${FETCH_CURRENT}/${LOCATION}?${OPTIONS_CURRENT}`)
       .then(res => res.json())
       .then(result => {
         if (!result.success) {
-          console.error("API call failed", result.error);
+          console.error("Current API call failed", result.error);
         } else {
           const currentWeather = {
             placeName: result.response.place.name,
@@ -88,7 +93,20 @@ class Main extends Component {
             sunset: result.response.ob.sunsetISO,
             skyCoverage: result.response.ob.sky
           };
-          this.setState({ currentWeather, isLoaded: true });
+          this.setState({ currentWeather });
+        }
+      });
+
+    // Fetch forecast for the next 23 hours
+    fetch(`${BASE_URL}/${FETCH_FORECAST}/${LOCATION}?${OPTIONS_FORECAST}`)
+      .then(res => res.json())
+      .then(result => {
+        if (!result.success) {
+          console.error("Forecast API call failed", result.error);
+          this.setState({ isLoaded: false });
+        } else {
+          const forecastWeather = result.response[0].periods;
+          this.setState({ forecastWeather, isLoaded: true });
         }
       });
   };
@@ -99,10 +117,10 @@ class Main extends Component {
     navigator.geolocation.getCurrentPosition(
       pos => {
         this.setState({ lat: pos.coords.latitude, long: pos.coords.longitude });
-        this.fetchCurrentWeather();
+        this.fetchWeatherFromAPI();
       },
       err => {
-        console.log(err);
+        console.error(err);
       }
     );
   };
