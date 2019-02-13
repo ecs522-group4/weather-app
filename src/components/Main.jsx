@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
+import TopBar from "./TopBar";
 
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
@@ -27,9 +28,14 @@ class Main extends Component {
   render() {
     const { classes } = this.props;
     const { currentWeather, isLoaded } = this.state;
+    const { pathname } = this.props.location;
 
     return (
       <div className={classes.container}>
+        <TopBar
+          pathname={pathname}
+          onRefresh={this.updateWeatherBasedOnLocation}
+        />
         <h1>Weather App</h1>
         <p>Weather: {isLoaded && currentWeather.weatherShort}</p>
         <p>Temperature: {isLoaded && currentWeather.tempC}</p>
@@ -38,9 +44,6 @@ class Main extends Component {
           Place: {isLoaded && currentWeather.cityName},{" "}
           {isLoaded && currentWeather.countryName}
         </p>
-        <button onClick={this.updateWeatherBasedOnLocation}>
-          Get weather for my location
-        </button>
       </div>
     );
   }
