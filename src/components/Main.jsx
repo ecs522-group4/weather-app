@@ -31,6 +31,7 @@ class Main extends Component {
     windSpeedUnit: "KPH",
     minimumTemperature: 20,
     minimumWindSpeed: 15,
+    sliderValue: 0
   };
 
   render() {
@@ -54,6 +55,11 @@ class Main extends Component {
           onCloseSettings={this.closeSettingsMenu}
           onOpenSettings={this.openSettingsMenu}
         />
+        {isLoaded && (
+          <h1 style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}>
+            You can fly!
+          </h1>
+        )}
         {isSettingsMenuOpen === false ? (
           <GeneralData
             isLoaded={isLoaded}
@@ -61,6 +67,7 @@ class Main extends Component {
             forecastWeather={forecastWeather}
             temperatureUnit={temperatureUnit}
             windSpeedUnit={windSpeedUnit}
+            onChangeSliderValue={this.updateSliderValue}
           />
         ) : (
           <Settings
@@ -188,6 +195,31 @@ class Main extends Component {
     this.setState({ sliderValue });
   };
 
+  checkIfCanFlyKite = () => {
+    const {
+      minimumWindSpeed,
+      minimumTemperature,
+      temperatureUnit,
+      windSpeedUnit,
+      forecastWeather,
+      sliderValue
+    } = this.state;
+    const temperature =
+      temperatureUnit === "C"
+        ? forecastWeather[sliderValue].tempC
+        : forecastWeather[sliderValue].tempF;
+    const windSpeed =
+      windSpeedUnit === "KPH"
+        ? forecastWeather[sliderValue].windSpeedKPH
+        : windSpeedUnit === "MPH"
+        ? forecastWeather[sliderValue].windSpeedMPH
+        : forecastWeather[sliderValue].windSpeedKTS;
+
+    if (temperature >= minimumTemperature && windSpeed >= minimumWindSpeed) {
+      return true;
+    }
+    return false;
+  };
 }
 
 const styles = createStyles({
