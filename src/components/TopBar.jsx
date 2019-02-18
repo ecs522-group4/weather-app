@@ -1,93 +1,95 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
+import IconButton from "@material-ui/core/IconButton";
+import SettingsIcon from "@material-ui/icons/Settings";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import CheckIcon from "@material-ui/icons/Check";
 
-class TopBar extends Component {
-  state = {
-    rigth: false
-  };
-
-  toggleDrawer = (side, open) => () => {
-    this.setState({
-      [side]: open
-    });
+class ClassName extends Component {
+  handleClickRefresh = () => {
+    this.props.onRefresh();
   };
 
   render() {
-    const { classes } = this.props;
-
-    const sideList = (
-      <div className={classes.list}>
-        <Typography>Settings</Typography>
-        <Typography>Temperature</Typography>
-        <Typography>Wind Spind</Typography>
-        <Typography>Sunny</Typography>
-      </div>
-    );
-
+    const { classes, onRefresh, pathname } = this.props;
     return (
-      <div className={classes.root}>
-        <AppBar position="static">
+      <>
+        <AppBar
+          position="static"
+          classes={{ colorPrimary: classes.navBarColour }}
+          className={classes.container}
+        >
           <Toolbar>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
+            {/* Conditional rendering based on which component we are rendering
+             */}
+            {pathname === "/" && (
+              <IconButton
+                color="inherit"
+                aria-label="Refresh"
+                onClick={this.handleClickRefresh}
+              >
+                <RefreshIcon />
+              </IconButton>
+            )}
+            {pathname === "/Settings" && (
+              <IconButton
+                color="inherit"
+                aria-label="Go back"
+                to="/"
+                component={Link}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+            )}
+            <Typography variant="h6" color="inherit" className={classes.title}>
               WhetherWind
             </Typography>
-
-            <Drawer
-              anchor="right"
-              open={this.state.right}
-              onClose={this.toggleDrawer("right", false)}
-            >
-              <div
-                tabIndex={0}
-                role="button"
-                onClick={this.toggleDrawer("right", false)}
-                onKeyDown={this.toggleDrawer("right", false)}
+            {pathname === "/" && (
+              <IconButton
+                component={Link}
+                color="inherit"
+                aria-label="Settings"
+                to="/Settings"
               >
-                {sideList}
-              </div>
-            </Drawer>
-            <IconButton
-              className={classes.menuButton}
-              onClick={this.toggleDrawer("right", true)}
-              color="inherit"
-              aria-label="Menu"
-            >
-              <MenuIcon />
-            </IconButton>
+                <SettingsIcon />
+              </IconButton>
+            )}
+            {pathname === "/Settings" && (
+              <IconButton color="inherit" aria-label="Save">
+                <CheckIcon />
+              </IconButton>
+            )}
           </Toolbar>
         </AppBar>
-      </div>
+      </>
     );
   }
 }
 
 const styles = createStyles({
-  root: {
+  title: {
     flexGrow: 1
   },
-  grow: {
-    flexGrow: 1
+  navBarColour: {
+    backgroundColor: "#061ca3"
   },
-  menuButton: {
-    marginRight: 10
+  linkToSettings: {
+    textDecoration: "none",
+    color: "inherit",
+    display: "none"
   },
-  list: {
-    width: 350
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "center",
+    margin: "0 auto"
   }
 });
 
-export default withStyles(styles)(TopBar);
+export default withStyles(styles)(ClassName);

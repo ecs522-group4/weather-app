@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
 import TopBar from "./TopBar";
+import GeneralData from "./GeneralData";
+
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
 const FETCH_CURRENT = "observations";
@@ -27,21 +29,16 @@ class Main extends Component {
   render() {
     const { classes } = this.props;
     const { currentWeather, isLoaded } = this.state;
+    const { pathname } = this.props.location;
 
     return (
       <div className={classes.container}>
-        <TopBar />
-        <h1>Weather App</h1>
-        <p>Weather: {isLoaded && currentWeather.weatherShort}</p>
-        <p>Temperature: {isLoaded && currentWeather.tempC}</p>
-        <p>Wind speed: {isLoaded && currentWeather.windKPH}</p>
-        <p>
-          Place: {isLoaded && currentWeather.cityName},{" "}
-          {isLoaded && currentWeather.countryName}
-        </p>
-        <button onClick={this.updateWeatherBasedOnLocation}>
-          Get weather for my location
-        </button>
+        <TopBar
+          pathname={pathname}
+          onRefresh={this.updateWeatherBasedOnLocation}
+        />
+
+        <GeneralData isLoaded={isLoaded} currentWeather={currentWeather} />
       </div>
     );
   }
@@ -130,11 +127,8 @@ const styles = createStyles({
   container: {
     display: "flex",
     flexDirection: "column",
-    width: "414px",
-    height: "736px",
     textAlign: "center",
-    margin: "0 auto",
-    backgroundColor: "#fafafa"
+    margin: "0 auto"
   }
 });
 
