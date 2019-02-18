@@ -66,6 +66,7 @@ class Main extends Component {
   // This function queries the API, and if we receive a valid response we tidy
   // it up and store it in the state
   fetchWeatherFromAPI = async () => {
+    let currentWeather;
     const { lat, long } = this.state;
     // If coordinates have been set, query by GPS position. Otherwise use
     // automatic position (retrieved by IP)
@@ -78,7 +79,7 @@ class Main extends Component {
         if (!result.success) {
           console.error("Current API call failed", result.error);
         } else {
-          const currentWeather = {
+          currentWeather = {
             placeName: result.response.place.name,
             cityName: result.response.place.city,
             countryName: result.response.place.country,
@@ -86,10 +87,10 @@ class Main extends Component {
             tempC: result.response.ob.tempC,
             tempF: result.response.ob.tempF,
             humidity: result.response.ob.humidity,
-            windKTS: result.response.ob.windSpeedKTS,
-            windKPH: result.response.ob.windSpeedKPH,
-            windMPH: result.response.ob.windSpeedMPH,
-            windDirDeg: result.response.ob.windDirDEG,
+            windSpeedKTS: result.response.ob.windSpeedKTS,
+            windSpeedKPH: result.response.ob.windSpeedKPH,
+            windSpeedMPH: result.response.ob.windSpeedMPH,
+            windDirDEG: result.response.ob.windDirDEG,
             windDir: result.response.ob.windDir,
             windGustKTS: result.response.ob.windGustKTS,
             windGustKPH: result.response.ob.windGustKPH,
@@ -101,9 +102,9 @@ class Main extends Component {
             feelsLikeC: result.response.ob.feelsLikeC,
             feelsLikeF: result.response.ob.feelsLikeF,
             isDay: result.response.ob.isDay,
-            sunrise: result.response.ob.sunriseISO,
-            sunset: result.response.ob.sunsetISO,
-            skyCoverage: result.response.ob.sky
+            sunriseISO: result.response.ob.sunriseISO,
+            sunsetISO: result.response.ob.sunsetISO,
+            sky: result.response.ob.sky
           };
           this.setState({ currentWeather });
         }
@@ -118,6 +119,8 @@ class Main extends Component {
           this.setState({ isLoaded: false });
         } else {
           const forecastWeather = result.response[0].periods;
+          // Adding the currentWeather at the beginning of the forecast array
+          forecastWeather.unshift(currentWeather);
           this.setState({ forecastWeather, isLoaded: true });
         }
       });
