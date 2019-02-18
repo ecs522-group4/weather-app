@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
 
-var background = "assets/backgrounds/boyKite.png";
-
 class GeneralData extends Component {
   render() {
     const { classes, currentWeather, isLoaded } = this.props;
@@ -26,15 +24,15 @@ const styles = createStyles({
   container: {
     color: "#191919",
     fontFamily: "Avenir Next",
-    backgroundImage: "url(" + background + ")",
-    backgroundSize: "cover",
-    overflow: "hidden",
+    fontSize: "170%",
     display: "flex",
     flexDirection: "column",
-    width: "50%",
-    height: "10%",
+    width: "60%",
+    height: "20%",
     textAlign: "left",
-    margin: "0 10%"
+    marginBottom: "7%",
+    marginLeft: "10%",
+    top: "60%"
   }
 });
 
