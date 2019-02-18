@@ -6,7 +6,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #707070;
+  background-color: #fafafa;
+  background-image: url("./assets/backgrounds/mainBg.png");
+  background-size: cover;
 }
 
 code {
