@@ -17,9 +17,16 @@ class GeneralData extends Component {
     return (
       <>
         <div className={classes.sliderContainer}>
+          {/* the forecastWeather array has 23 elements (0-22 index).
+              the slider has a range between 0-23 to allow us to assign the 0
+              to the currentWeather, and the remaning 1-23 to forecastWeather.
+              However, we need to change the range from 1-23 to 0-22.
+              (sliderValue - 1) */}
           <Slider
             classes={{ container: classes.slider }}
-            max="22"
+            min={0}
+            max={23}
+            step={1}
             value={sliderValue}
             aria-labelledby="label"
             onChange={this.handleChange}
@@ -29,18 +36,17 @@ class GeneralData extends Component {
           {sliderValue === 0
             ? isLoaded && currentWeather.windKPH + " KPH"
             : isLoaded &&
-              forecastWeather[Math.floor(sliderValue)].windSpeedKPH + " KPH"}
+              forecastWeather[sliderValue - 1].windSpeedKPH + " KPH"}
         </h1>
         <h1 className={classes.container}>
           {sliderValue === 0
             ? isLoaded && currentWeather.tempC + " °C"
-            : isLoaded &&
-              forecastWeather[Math.floor(sliderValue)].tempC + " °C"}
+            : isLoaded && forecastWeather[sliderValue - 1].tempC + " °C"}
         </h1>
         <h1 className={classes.container}>
           {sliderValue === 0
             ? isLoaded && currentWeather.weatherShort
-            : isLoaded && forecastWeather[Math.floor(sliderValue)].weather}
+            : isLoaded && forecastWeather[Math.floor(sliderValue) - 1].weather}
         </h1>
       </>
     );
