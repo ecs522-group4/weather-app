@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
-import { Route, Link, BrowserRouter as Router } from "react-router-dom";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -12,7 +11,6 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import InputBase from "@material-ui/core/InputBase";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import TopBar from "./TopBar";
 
 const maxTemperatureC = 50;
 const minTemperatureC = -18;
@@ -31,7 +29,8 @@ class Settings extends Component {
     windSpeed: "15",
     temperature: "20",
     temperatureUnit: "C",
-    speedUnit: "KPH"
+    speedUnit: "KPH",
+    isOpen: false
   };
 
   // Handling array of switches
@@ -212,13 +211,10 @@ class Settings extends Component {
 
   render() {
     const { classes } = this.props;
-    const { temperatureUnit, speedUnit } = this.state;
-    // Current URL
-    const { pathname } = this.props.location;
+    const { temperatureUnit, speedUnit, isOpen } = this.state;
 
     return (
       <>
-        <TopBar pathname={pathname} />
         <List
           subheader={
             <ListSubheader>Optimal weather conditions settings</ListSubheader>
@@ -246,7 +242,7 @@ class Settings extends Component {
             />
             <ListItemSecondaryAction>
               <RemoveIcon size="small" onClick={this.handleDecreaseWindSpeed} />
-              {/* onFocus will select all the text. We need blur to remove the 
+              {/* onFocus will select all the text. We need blur to remove the
                selection in case the user don't type anything after focussing*/}
               <InputBase
                 type="number"

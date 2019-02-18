@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -12,12 +11,27 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import CheckIcon from "@material-ui/icons/Check";
 
 class ClassName extends Component {
+  state = {
+    isSettingsMenuOpen: false
+  };
+
   handleClickRefresh = () => {
     this.props.onRefresh();
   };
 
+  handleCloseSettings = () => {
+    this.props.onCloseSettings();
+    this.setState({ isSettingsMenuOpen: false });
+  };
+
+  handleOpenSettings = () => {
+    this.props.onOpenSettings();
+    this.setState({ isSettingsMenuOpen: true });
+  };
+
   render() {
-    const { classes, onRefresh, pathname } = this.props;
+    const { classes, onRefresh, onCloseSettings, onOpenSettings } = this.props;
+    const { isSettingsMenuOpen } = this.state;
     return (
       <>
         <AppBar
@@ -28,7 +42,7 @@ class ClassName extends Component {
           <Toolbar>
             {/* Conditional rendering based on which component we are rendering
              */}
-            {pathname === "/" && (
+            {!isSettingsMenuOpen && (
               <IconButton
                 color="inherit"
                 aria-label="Refresh"
@@ -37,12 +51,11 @@ class ClassName extends Component {
                 <RefreshIcon />
               </IconButton>
             )}
-            {pathname === "/Settings" && (
+            {isSettingsMenuOpen && (
               <IconButton
                 color="inherit"
                 aria-label="Go back"
-                to="/"
-                component={Link}
+                onClick={this.handleCloseSettings}
               >
                 <ArrowBackIcon />
               </IconButton>
@@ -50,17 +63,16 @@ class ClassName extends Component {
             <Typography variant="h6" color="inherit" className={classes.title}>
               WhetherWind
             </Typography>
-            {pathname === "/" && (
+            {!isSettingsMenuOpen && (
               <IconButton
-                component={Link}
                 color="inherit"
                 aria-label="Settings"
-                to="/Settings"
+                onClick={this.handleOpenSettings}
               >
                 <SettingsIcon />
               </IconButton>
             )}
-            {pathname === "/Settings" && (
+            {isSettingsMenuOpen && (
               <IconButton color="inherit" aria-label="Save">
                 <CheckIcon />
               </IconButton>
