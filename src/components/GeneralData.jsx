@@ -9,10 +9,19 @@ class GeneralData extends Component {
 
   handleChange = (event, sliderValue) => {
     this.setState({ sliderValue });
+    this.props.onChangeSliderValue(sliderValue);
   };
 
   render() {
-    const { classes, currentWeather, forecastWeather, isLoaded } = this.props;
+    const {
+      classes,
+      currentWeather,
+      forecastWeather,
+      isLoaded,
+      temperatureUnit,
+      windSpeedUnit,
+      onChangeSliderValue
+    } = this.props;
     const { sliderValue } = this.state;
     return (
       <>
@@ -33,24 +42,38 @@ class GeneralData extends Component {
           />
         </div>
         <h1 className={classes.container}>
-          {sliderValue === 0
-            ? isLoaded && currentWeather.windKPH + " KPH"
-            : isLoaded &&
-              forecastWeather[sliderValue - 1].windSpeedKPH + " KPH"}
+          {isLoaded &&
+            this.getWindSpeedDataBasedOnUnit(sliderValue, windSpeedUnit)}
         </h1>
         <h1 className={classes.container}>
-          {sliderValue === 0
-            ? isLoaded && currentWeather.tempC + " °C"
-            : isLoaded && forecastWeather[sliderValue - 1].tempC + " °C"}
+          {isLoaded &&
+            this.getTemperatureDataBasedOnUnit(sliderValue, temperatureUnit)}
         </h1>
         <h1 className={classes.container}>
-          {sliderValue === 0
-            ? isLoaded && currentWeather.weatherShort
-            : isLoaded && forecastWeather[Math.floor(sliderValue) - 1].weather}
+          {isLoaded && forecastWeather[sliderValue].weather}
         </h1>
       </>
     );
   }
+
+  getWindSpeedDataBasedOnUnit = (sliderValue, unit) => {
+    const { forecastWeather } = this.props;
+    switch (unit) {
+      case "KPH":
+        return `${forecastWeather[sliderValue].windSpeedKPH} ${unit}`;
+      case "MPH":
+        return `${forecastWeather[sliderValue].windSpeedMPH} ${unit}`;
+      case "KTS":
+        return `${forecastWeather[sliderValue].windSpeedKTS} ${unit}`;
+    }
+  };
+
+  getTemperatureDataBasedOnUnit = (sliderValue, unit) => {
+    const { forecastWeather } = this.props;
+    return unit === "F"
+      ? `${forecastWeather[sliderValue].tempF} °F`
+      : `${forecastWeather[sliderValue].tempC} °C`;
+  };
 }
 
 const styles = createStyles({

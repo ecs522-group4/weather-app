@@ -25,7 +25,13 @@ class Main extends Component {
     forecastWeather: "",
     // Indicates if we received the API data correctly
     isLoaded: false,
-    isSettingsMenuOpen: false
+    isSettingsMenuOpen: false,
+    // Default settings. User can change these in the Settings
+    temperatureUnit: "C",
+    windSpeedUnit: "KPH",
+    minimumTemperature: 20,
+    minimumWindSpeed: 15,
+    sliderValue: 0
   };
 
   render() {
@@ -34,7 +40,11 @@ class Main extends Component {
       currentWeather,
       forecastWeather,
       isLoaded,
-      isSettingsMenuOpen
+      isSettingsMenuOpen,
+      temperatureUnit,
+      windSpeedUnit,
+      minimumWindSpeed,
+      minimumTemperature
     } = this.state;
 
     return (
@@ -45,14 +55,31 @@ class Main extends Component {
           onCloseSettings={this.closeSettingsMenu}
           onOpenSettings={this.openSettingsMenu}
         />
+        {isLoaded && (
+          <h1 style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}>
+            You can fly!
+          </h1>
+        )}
         {isSettingsMenuOpen === false ? (
           <GeneralData
             isLoaded={isLoaded}
             currentWeather={currentWeather}
             forecastWeather={forecastWeather}
+            temperatureUnit={temperatureUnit}
+            windSpeedUnit={windSpeedUnit}
+            onChangeSliderValue={this.updateSliderValue}
           />
         ) : (
-          <Settings />
+          <Settings
+            temperatureUnit={temperatureUnit}
+            windSpeedUnit={windSpeedUnit}
+            minimumWindSpeed={minimumWindSpeed}
+            minimumTemperature={minimumTemperature}
+            onChangeTemperatureUnit={this.changeTemperatureUnit}
+            onChangeSpeedUnit={this.changeSpeedUnit}
+            onChangeTemperature={this.changeminimumTemperature}
+            onChangeWindSpeed={this.changeminimumWindSpeed}
+          />
         )}
       </div>
     );
@@ -66,6 +93,7 @@ class Main extends Component {
   // This function queries the API, and if we receive a valid response we tidy
   // it up and store it in the state
   fetchWeatherFromAPI = async () => {
+    let currentWeather;
     const { lat, long } = this.state;
     // If coordinates have been set, query by GPS position. Otherwise use
     // automatic position (retrieved by IP)
@@ -78,7 +106,7 @@ class Main extends Component {
         if (!result.success) {
           console.error("Current API call failed", result.error);
         } else {
-          const currentWeather = {
+          currentWeather = {
             placeName: result.response.place.name,
             cityName: result.response.place.city,
             countryName: result.response.place.country,
@@ -86,10 +114,10 @@ class Main extends Component {
             tempC: result.response.ob.tempC,
             tempF: result.response.ob.tempF,
             humidity: result.response.ob.humidity,
-            windKTS: result.response.ob.windSpeedKTS,
-            windKPH: result.response.ob.windSpeedKPH,
-            windMPH: result.response.ob.windSpeedMPH,
-            windDirDeg: result.response.ob.windDirDEG,
+            windSpeedKTS: result.response.ob.windSpeedKTS,
+            windSpeedKPH: result.response.ob.windSpeedKPH,
+            windSpeedMPH: result.response.ob.windSpeedMPH,
+            windDirDEG: result.response.ob.windDirDEG,
             windDir: result.response.ob.windDir,
             windGustKTS: result.response.ob.windGustKTS,
             windGustKPH: result.response.ob.windGustKPH,
@@ -101,9 +129,9 @@ class Main extends Component {
             feelsLikeC: result.response.ob.feelsLikeC,
             feelsLikeF: result.response.ob.feelsLikeF,
             isDay: result.response.ob.isDay,
-            sunrise: result.response.ob.sunriseISO,
-            sunset: result.response.ob.sunsetISO,
-            skyCoverage: result.response.ob.sky
+            sunriseISO: result.response.ob.sunriseISO,
+            sunsetISO: result.response.ob.sunsetISO,
+            sky: result.response.ob.sky
           };
           this.setState({ currentWeather });
         }
@@ -118,6 +146,8 @@ class Main extends Component {
           this.setState({ isLoaded: false });
         } else {
           const forecastWeather = result.response[0].periods;
+          // Adding the currentWeather at the beginning of the forecast array
+          forecastWeather.unshift(currentWeather);
           this.setState({ forecastWeather, isLoaded: true });
         }
       });
@@ -143,6 +173,52 @@ class Main extends Component {
 
   openSettingsMenu = () => {
     this.setState({ isSettingsMenuOpen: true });
+  };
+
+  changeTemperatureUnit = temperatureUnit => {
+    this.setState({ temperatureUnit });
+  };
+
+  changeSpeedUnit = windSpeedUnit => {
+    this.setState({ windSpeedUnit });
+  };
+
+  changeminimumWindSpeed = minimumWindSpeed => {
+    this.setState({ minimumWindSpeed });
+  };
+
+  changeminimumTemperature = minimumTemperature => {
+    this.setState({ minimumTemperature });
+  };
+
+  updateSliderValue = sliderValue => {
+    this.setState({ sliderValue });
+  };
+
+  checkIfCanFlyKite = () => {
+    const {
+      minimumWindSpeed,
+      minimumTemperature,
+      temperatureUnit,
+      windSpeedUnit,
+      forecastWeather,
+      sliderValue
+    } = this.state;
+    const temperature =
+      temperatureUnit === "C"
+        ? forecastWeather[sliderValue].tempC
+        : forecastWeather[sliderValue].tempF;
+    const windSpeed =
+      windSpeedUnit === "KPH"
+        ? forecastWeather[sliderValue].windSpeedKPH
+        : windSpeedUnit === "MPH"
+        ? forecastWeather[sliderValue].windSpeedMPH
+        : forecastWeather[sliderValue].windSpeedKTS;
+
+    if (temperature >= minimumTemperature && windSpeed >= minimumWindSpeed) {
+      return true;
+    }
+    return false;
   };
 }
 
