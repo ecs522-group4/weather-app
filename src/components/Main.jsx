@@ -25,7 +25,12 @@ class Main extends Component {
     forecastWeather: "",
     // Indicates if we received the API data correctly
     isLoaded: false,
-    isSettingsMenuOpen: false
+    isSettingsMenuOpen: false,
+    // Default settings. User can change these in the Settings
+    temperatureUnit: "C",
+    windSpeedUnit: "KPH",
+    minimumTemperature: 20,
+    minimumWindSpeed: 15,
   };
 
   render() {
@@ -34,7 +39,11 @@ class Main extends Component {
       currentWeather,
       forecastWeather,
       isLoaded,
-      isSettingsMenuOpen
+      isSettingsMenuOpen,
+      temperatureUnit,
+      windSpeedUnit,
+      minimumWindSpeed,
+      minimumTemperature
     } = this.state;
 
     return (
@@ -50,9 +59,20 @@ class Main extends Component {
             isLoaded={isLoaded}
             currentWeather={currentWeather}
             forecastWeather={forecastWeather}
+            temperatureUnit={temperatureUnit}
+            windSpeedUnit={windSpeedUnit}
           />
         ) : (
-          <Settings />
+          <Settings
+            temperatureUnit={temperatureUnit}
+            windSpeedUnit={windSpeedUnit}
+            minimumWindSpeed={minimumWindSpeed}
+            minimumTemperature={minimumTemperature}
+            onChangeTemperatureUnit={this.changeTemperatureUnit}
+            onChangeSpeedUnit={this.changeSpeedUnit}
+            onChangeTemperature={this.changeminimumTemperature}
+            onChangeWindSpeed={this.changeminimumWindSpeed}
+          />
         )}
       </div>
     );
@@ -147,6 +167,27 @@ class Main extends Component {
   openSettingsMenu = () => {
     this.setState({ isSettingsMenuOpen: true });
   };
+
+  changeTemperatureUnit = temperatureUnit => {
+    this.setState({ temperatureUnit });
+  };
+
+  changeSpeedUnit = windSpeedUnit => {
+    this.setState({ windSpeedUnit });
+  };
+
+  changeminimumWindSpeed = minimumWindSpeed => {
+    this.setState({ minimumWindSpeed });
+  };
+
+  changeminimumTemperature = minimumTemperature => {
+    this.setState({ minimumTemperature });
+  };
+
+  updateSliderValue = sliderValue => {
+    this.setState({ sliderValue });
+  };
+
 }
 
 const styles = createStyles({

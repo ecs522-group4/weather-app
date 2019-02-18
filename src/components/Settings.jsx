@@ -26,11 +26,25 @@ const minSpeedKTS = 0;
 class Settings extends Component {
   state = {
     checked: ["daytime"],
-    windSpeed: "15",
-    temperature: "20",
-    temperatureUnit: "C",
-    speedUnit: "KPH",
-    isOpen: false
+    windSpeed: "",
+    temperature: "",
+    temperatureUnit: "",
+    windSpeedUnit: ""
+  };
+
+  componentDidMount = () => {
+    const {
+      temperatureUnit,
+      windSpeedUnit,
+      minimumWindSpeed,
+      minimumTemperature
+    } = this.props;
+    this.setState({
+      temperatureUnit,
+      windSpeedUnit,
+      windSpeed: minimumWindSpeed,
+      temperature: minimumTemperature
+    });
   };
 
   // Handling array of switches
@@ -54,12 +68,14 @@ class Settings extends Component {
     const { windSpeed } = this.state;
     const newSpeed = parseInt(windSpeed) - 1;
     this.updateWindSpeedValue(newSpeed);
+    this.props.onChangeWindSpeed(newSpeed);
   };
 
   handleIncreaseWindSpeed = () => {
     const { windSpeed } = this.state;
     const newSpeed = parseInt(windSpeed) + 1;
     this.updateWindSpeedValue(newSpeed);
+    this.props.onChangeWindSpeed(newSpeed);
   };
 
   handleChangeWindSpeed = e => {
@@ -72,21 +88,24 @@ class Settings extends Component {
     // If user users letters or backspace/delete as first input, show 0 rather
     // than an empty textfield
     windSpeed = windSpeed === "" ? 0 : windSpeed;
-    const { speedUnit } = this.state;
-    switch (speedUnit) {
+    const { windSpeedUnit } = this.state;
+    switch (windSpeedUnit) {
       case "KPH":
         if (windSpeed <= maxSpeedKPH && windSpeed >= minSpeedKPH) {
           this.setState({ windSpeed });
+          this.props.onChangeWindSpeed(windSpeed);
         }
         break;
       case "MPH":
         if (windSpeed <= maxSpeedMPH && windSpeed >= minSpeedMPH) {
           this.setState({ windSpeed });
+          this.props.onChangeWindSpeed(windSpeed);
         }
         break;
       case "KTS":
         if (windSpeed <= maxSpeedKTS && windSpeed >= minSpeedKTS) {
           this.setState({ windSpeed });
+          this.props.onChangeWindSpeed(windSpeed);
         }
         break;
     }
@@ -96,12 +115,14 @@ class Settings extends Component {
     const { temperature } = this.state;
     const newTemperature = parseInt(temperature) - 1;
     this.updateTemperatureValue(newTemperature);
+    this.props.onChangeTemperature(newTemperature);
   };
 
   handleIncreaseTemperature = () => {
     const { temperature, temperatureUnit } = this.state;
     const newTemperature = parseInt(temperature) + 1;
     this.updateTemperatureValue(newTemperature);
+    this.props.onChangeTemperature(newTemperature);
   };
 
   handleChangeTemperature = e => {
@@ -119,11 +140,13 @@ class Settings extends Component {
         // to the minimum
         if (temperature <= maxTemperatureC && temperature >= minTemperatureC) {
           this.setState({ temperature });
+          this.props.onChangeTemperature(temperature);
         }
         break;
       case "F":
         if (temperature <= maxTemperatureF && temperature >= minTemperatureF) {
           this.setState({ temperature });
+          this.props.onChangeTemperature(temperature);
         }
         break;
     }
@@ -138,6 +161,7 @@ class Settings extends Component {
             ? Math.floor((this.state.temperature * 9) / 5 + 32)
             : Math.floor(((this.state.temperature - 32) * 5) / 9);
         this.updateTemperatureValue(convertedTemperature);
+        this.props.onChangeTemperatureUnit(this.state.temperatureUnit);
       });
     }
   };
@@ -152,11 +176,11 @@ class Settings extends Component {
     }
 
     if (value) {
-      const oldUnit = this.state.speedUnit;
-      this.setState({ speedUnit: value }, () => {
-        const { speedUnit, windSpeed } = this.state;
+      const oldUnit = this.state.windSpeedUnit;
+      this.setState({ windSpeedUnit: value }, () => {
+        const { windSpeedUnit, windSpeed } = this.state;
         let convertedWindSpeed;
-        if (oldUnit === "KPH" && speedUnit === "MPH")
+        if (oldUnit === "KPH" && windSpeedUnit === "MPH")
           convertedWindSpeed = mapRange(
             windSpeed,
             minSpeedKPH,
@@ -164,7 +188,7 @@ class Settings extends Component {
             minSpeedMPH,
             maxSpeedMPH
           );
-        if (oldUnit === "KPH" && speedUnit === "KTS")
+        if (oldUnit === "KPH" && windSpeedUnit === "KTS")
           convertedWindSpeed = mapRange(
             windSpeed,
             minSpeedKPH,
@@ -172,7 +196,7 @@ class Settings extends Component {
             minSpeedKTS,
             maxSpeedKTS
           );
-        if (oldUnit === "MPH" && speedUnit === "KPH")
+        if (oldUnit === "MPH" && windSpeedUnit === "KPH")
           convertedWindSpeed = mapRange(
             windSpeed,
             minSpeedMPH,
@@ -180,7 +204,7 @@ class Settings extends Component {
             minSpeedKPH,
             maxSpeedKPH
           );
-        if (oldUnit === "MPH" && speedUnit === "KTS")
+        if (oldUnit === "MPH" && windSpeedUnit === "KTS")
           convertedWindSpeed = mapRange(
             windSpeed,
             minSpeedMPH,
@@ -188,7 +212,7 @@ class Settings extends Component {
             minSpeedKTS,
             maxSpeedKTS
           );
-        if (oldUnit === "KTS" && speedUnit === "KPH")
+        if (oldUnit === "KTS" && windSpeedUnit === "KPH")
           convertedWindSpeed = mapRange(
             windSpeed,
             minSpeedKTS,
@@ -196,7 +220,7 @@ class Settings extends Component {
             minSpeedKPH,
             maxSpeedKPH
           );
-        if (oldUnit === "KTS" && speedUnit === "MPH")
+        if (oldUnit === "KTS" && windSpeedUnit === "MPH")
           convertedWindSpeed = mapRange(
             windSpeed,
             minSpeedKTS,
@@ -205,13 +229,22 @@ class Settings extends Component {
             maxSpeedMPH
           );
         this.updateWindSpeedValue(Math.round(convertedWindSpeed));
+        this.props.onChangeSpeedUnit(windSpeedUnit);
       });
     }
   };
 
   render() {
-    const { classes } = this.props;
-    const { temperatureUnit, speedUnit, isOpen } = this.state;
+    const {
+      classes,
+      isOpen,
+      temperatureUnit,
+      windSpeedUnit,
+      minimumWindSpeed,
+      minimumTemperature,
+      onChangeTemperature,
+      onChangeWindSpeed
+    } = this.props;
 
     return (
       <>
@@ -231,13 +264,13 @@ class Settings extends Component {
           </ListItem>
           <ListItem>
             <ListItemText
-              primary={`Minimum Wind Speed in ${speedUnit}`}
+              primary={`Minimum Wind Speed in ${windSpeedUnit}`}
               secondary={
-                this.state.speedUnit === "KPH"
-                  ? `Values between ${minSpeedKPH} ${speedUnit} and ${maxSpeedKPH} ${speedUnit}`
-                  : this.state.speedUnit === "MPH"
-                  ? `Values between ${minSpeedMPH} ${speedUnit} and ${maxSpeedMPH} ${speedUnit}`
-                  : `Values between ${minSpeedKTS} ${speedUnit} and ${maxSpeedKTS} ${speedUnit}`
+                this.state.windSpeedUnit === "KPH"
+                  ? `Values between ${minSpeedKPH} ${windSpeedUnit} and ${maxSpeedKPH} ${windSpeedUnit}`
+                  : this.state.windSpeedUnit === "MPH"
+                  ? `Values between ${minSpeedMPH} ${windSpeedUnit} and ${maxSpeedMPH} ${windSpeedUnit}`
+                  : `Values between ${minSpeedKTS} ${windSpeedUnit} and ${maxSpeedKTS} ${windSpeedUnit}`
               }
             />
             <ListItemSecondaryAction>
@@ -314,7 +347,7 @@ class Settings extends Component {
             />
             <ListItemSecondaryAction>
               <ToggleButtonGroup
-                value={this.state.speedUnit}
+                value={this.state.windSpeedUnit}
                 exclusive
                 onChange={this.handleChangeSpeedUnit}
               >

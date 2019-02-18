@@ -12,7 +12,14 @@ class GeneralData extends Component {
   };
 
   render() {
-    const { classes, currentWeather, forecastWeather, isLoaded } = this.props;
+    const {
+      classes,
+      currentWeather,
+      forecastWeather,
+      isLoaded,
+      temperatureUnit,
+      windSpeedUnit,
+    } = this.props;
     const { sliderValue } = this.state;
     return (
       <>
