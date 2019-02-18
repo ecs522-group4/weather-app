@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
 import TopBar from "./TopBar";
+import Settings from "./Settings";
 import GeneralData from "./GeneralData";
 
 /* --- WEATHER API --- */
@@ -23,26 +24,36 @@ class Main extends Component {
     // Stores an object with weather information for the next 23 hours
     forecastWeather: "",
     // Indicates if we received the API data correctly
-    isLoaded: false
+    isLoaded: false,
+    isSettingsMenuOpen: false
   };
 
   render() {
     const { classes } = this.props;
-    const { currentWeather, forecastWeather, isLoaded } = this.state;
-    const { pathname } = this.props.location;
+    const {
+      currentWeather,
+      forecastWeather,
+      isLoaded,
+      isSettingsMenuOpen
+    } = this.state;
 
     return (
       <div className={classes.container}>
         <TopBar
-          pathname={pathname}
+          isSettingsMenuOpen={isSettingsMenuOpen}
           onRefresh={this.updateWeatherBasedOnLocation}
+          onCloseSettings={this.closeSettingsMenu}
+          onOpenSettings={this.openSettingsMenu}
         />
-
-        <GeneralData
-          isLoaded={isLoaded}
-          currentWeather={currentWeather}
-          forecastWeather={forecastWeather}
-        />
+        {isSettingsMenuOpen === false ? (
+          <GeneralData
+            isLoaded={isLoaded}
+            currentWeather={currentWeather}
+            forecastWeather={forecastWeather}
+          />
+        ) : (
+          <Settings />
+        )}
       </div>
     );
   }
@@ -124,6 +135,14 @@ class Main extends Component {
         console.error(err);
       }
     );
+  };
+
+  closeSettingsMenu = () => {
+    this.setState({ isSettingsMenuOpen: false });
+  };
+
+  openSettingsMenu = () => {
+    this.setState({ isSettingsMenuOpen: true });
   };
 }
 
