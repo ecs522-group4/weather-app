@@ -28,7 +28,7 @@ class Main extends Component {
 
   render() {
     const { classes } = this.props;
-    const { currentWeather, isLoaded } = this.state;
+    const { currentWeather, forecastWeather, isLoaded } = this.state;
     const { pathname } = this.props.location;
 
     return (
@@ -38,7 +38,11 @@ class Main extends Component {
           onRefresh={this.updateWeatherBasedOnLocation}
         />
 
-        <GeneralData isLoaded={isLoaded} currentWeather={currentWeather} />
+        <GeneralData
+          isLoaded={isLoaded}
+          currentWeather={currentWeather}
+          forecastWeather={forecastWeather}
+        />
       </div>
     );
   }
