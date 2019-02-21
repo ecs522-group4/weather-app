@@ -108,6 +108,8 @@ class Settings extends Component {
           this.props.onChangeWindSpeed(windSpeed);
         }
         break;
+      default:
+        break;
     }
   };
 
@@ -119,7 +121,7 @@ class Settings extends Component {
   };
 
   handleIncreaseTemperature = () => {
-    const { temperature, temperatureUnit } = this.state;
+    const { temperature } = this.state;
     const newTemperature = parseInt(temperature) + 1;
     this.updateTemperatureValue(newTemperature);
     this.props.onChangeTemperature(newTemperature);
@@ -148,6 +150,8 @@ class Settings extends Component {
           this.setState({ temperature });
           this.props.onChangeTemperature(temperature);
         }
+        break;
+      default:
         break;
     }
   };
@@ -235,16 +239,7 @@ class Settings extends Component {
   };
 
   render() {
-    const {
-      classes,
-      isOpen,
-      temperatureUnit,
-      windSpeedUnit,
-      minimumWindSpeed,
-      minimumTemperature,
-      onChangeTemperature,
-      onChangeWindSpeed
-    } = this.props;
+    const { classes, temperatureUnit, windSpeedUnit } = this.props;
 
     return (
       <>
