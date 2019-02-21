@@ -15,12 +15,10 @@ class GeneralData extends Component {
   render() {
     const {
       classes,
-      currentWeather,
       forecastWeather,
       isLoaded,
       temperatureUnit,
-      windSpeedUnit,
-      onChangeSliderValue
+      windSpeedUnit
     } = this.props;
     const { sliderValue } = this.state;
     return (
@@ -65,6 +63,8 @@ class GeneralData extends Component {
         return `${forecastWeather[sliderValue].windSpeedMPH} ${unit}`;
       case "KTS":
         return `${forecastWeather[sliderValue].windSpeedKTS} ${unit}`;
+      default:
+        break;
     }
   };
 
