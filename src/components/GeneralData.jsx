@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/lab/Slider";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 class GeneralData extends Component {
   state = {
@@ -18,7 +19,8 @@ class GeneralData extends Component {
       forecastWeather,
       isLoaded,
       temperatureUnit,
-      windSpeedUnit
+      windSpeedUnit,
+      isValidCity
     } = this.props;
     const { sliderValue } = this.state;
     return (
@@ -39,6 +41,11 @@ class GeneralData extends Component {
             onChange={this.handleChange}
           />
         </div>
+        {!isLoaded && isValidCity && (
+          <div className={classes.loadingContainer}>
+            <CircularProgress />
+          </div>
+        )}
         <h1 className={classes.container}>
           {isLoaded &&
             this.getWindSpeedDataBasedOnUnit(sliderValue, windSpeedUnit)}
@@ -94,6 +101,10 @@ const styles = createStyles({
     marginLeft: "10%",
     marginRight: "10%",
     marginTop: "20%"
+  },
+  loadingContainer: {
+    width: "100%",
+    margin: "20px auto"
   }
 });
 

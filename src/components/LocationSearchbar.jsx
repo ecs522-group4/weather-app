@@ -6,6 +6,8 @@ import NoSsr from "@material-ui/core/NoSsr";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
+import LocationOn from "@material-ui/icons/LocationOn";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 function NoOptionsMessage(props) {
   return (
@@ -27,6 +29,10 @@ function Control(props) {
   return (
     <TextField
       multiline
+      error={!props.selectProps.isValidCity}
+      helperText={
+        props.selectProps.isValidCity ? null : "Selected city not supported"
+      }
       InputProps={{
         inputComponent,
         inputProps: {
@@ -34,7 +40,12 @@ function Control(props) {
           inputRef: props.innerRef,
           children: props.children,
           ...props.innerProps
-        }
+        },
+        endAdornment: (
+          <InputAdornment>
+            <LocationOn />
+          </InputAdornment>
+        )
       }}
       onChange={e => {
         props.selectProps.onTyping(e.target.value);
@@ -176,7 +187,7 @@ class LocationSearchbar extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, isValidCity } = this.props;
 
     const selectStyles = {
       input: base => ({
@@ -200,6 +211,7 @@ class LocationSearchbar extends Component {
             placeholder="Select location.."
             onTyping={this.getCities}
             onBlur={this.handleBlur}
+            isValidCity={isValidCity}
           />
         </NoSsr>
       </div>
