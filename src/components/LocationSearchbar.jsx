@@ -123,15 +123,23 @@ class LocationSearchbar extends Component {
     suggestions: []
   };
 
-  handleChange = name => value => {
+  handleSelectNewCity = name => value => {
     let cleanValue = { ...value };
     // Take just the city name (e.g. "London, England, UK" to "London")
     const newLabel = cleanValue.label.split(",")[0];
+    // Take the last part (e.g. "London, England, UK" to "UK")
+    const newValue = cleanValue.value
+      .split(",")
+      .pop()
+      .trim();
     cleanValue.label = newLabel;
+    cleanValue.value = newValue;
     this.setState({
       [name]: cleanValue,
       suggestions: []
     });
+    // Format string to query weather API correctly (e.g. London,England)
+    this.props.onSelectNewCity(`${cleanValue.label},${cleanValue.value}`);
   };
 
   handleBlur = e => {
@@ -155,7 +163,7 @@ class LocationSearchbar extends Component {
           const suggestions = results["_embedded"]["city:search-results"].map(
             cityResult => {
               return {
-                value: cityResult["matching_full_name"].split(",")[0],
+                value: cityResult["matching_full_name"],
                 label: cityResult["matching_full_name"]
               };
             }
@@ -188,7 +196,7 @@ class LocationSearchbar extends Component {
             options={this.state.suggestions}
             components={components}
             value={this.state.locationQuery}
-            onChange={this.handleChange("locationQuery")}
+            onChange={this.handleSelectNewCity("locationQuery")}
             placeholder="Select location.."
             onTyping={this.getCities}
             onBlur={this.handleBlur}
