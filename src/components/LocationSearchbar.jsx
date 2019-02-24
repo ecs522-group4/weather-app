@@ -27,6 +27,10 @@ function Control(props) {
   return (
     <TextField
       multiline
+      error={!props.selectProps.isValidCity}
+      helperText={
+        props.selectProps.isValidCity ? null : "Selected city not supported"
+      }
       InputProps={{
         inputComponent,
         inputProps: {
@@ -176,7 +180,7 @@ class LocationSearchbar extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, isValidCity } = this.props;
 
     const selectStyles = {
       input: base => ({
@@ -200,6 +204,7 @@ class LocationSearchbar extends Component {
             placeholder="Select location.."
             onTyping={this.getCities}
             onBlur={this.handleBlur}
+            isValidCity={isValidCity}
           />
         </NoSsr>
       </div>

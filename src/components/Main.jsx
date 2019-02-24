@@ -33,7 +33,7 @@ class Main extends Component {
     minimumTemperature: 20,
     minimumWindSpeed: 15,
     sliderValue: 0,
-    currentCity: ""
+    isValidCity: true
   };
 
   render() {
@@ -46,7 +46,8 @@ class Main extends Component {
       temperatureUnit,
       windSpeedUnit,
       minimumWindSpeed,
-      minimumTemperature
+      minimumTemperature,
+      isValidCity
     } = this.state;
 
     return (
@@ -57,12 +58,16 @@ class Main extends Component {
           onCloseSettings={this.closeSettingsMenu}
           onOpenSettings={this.openSettingsMenu}
         />
-        <LocationSearchbar onSelectNewCity={this.updateCurrentCity} />
-        {isLoaded && (
-          <h1 style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}>
-            You can fly!
-          </h1>
-        )}
+
+        <LocationSearchbar
+          onSelectNewCity={this.updateCurrentCity}
+          isValidCity={isValidCity}
+        />
+
+        <h1 style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}>
+          You can fly!
+        </h1>
+
         {isSettingsMenuOpen === false ? (
           <GeneralData
             isLoaded={isLoaded}
@@ -71,6 +76,7 @@ class Main extends Component {
             temperatureUnit={temperatureUnit}
             windSpeedUnit={windSpeedUnit}
             onChangeSliderValue={this.updateSliderValue}
+            isValidCity={isValidCity}
           />
         ) : (
           <Settings
@@ -163,6 +169,7 @@ class Main extends Component {
               });
           } else {
             console.error("Place not supported");
+            this.setState({ isValidCity: false });
           }
         }
       });
