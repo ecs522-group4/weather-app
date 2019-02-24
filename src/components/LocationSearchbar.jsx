@@ -6,6 +6,8 @@ import NoSsr from "@material-ui/core/NoSsr";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
+import LocationOn from "@material-ui/icons/LocationOn";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 function NoOptionsMessage(props) {
   return (
@@ -38,7 +40,12 @@ function Control(props) {
           inputRef: props.innerRef,
           children: props.children,
           ...props.innerProps
-        }
+        },
+        endAdornment: (
+          <InputAdornment>
+            <LocationOn />
+          </InputAdornment>
+        )
       }}
       onChange={e => {
         props.selectProps.onTyping(e.target.value);
