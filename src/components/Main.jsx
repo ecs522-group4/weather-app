@@ -3,6 +3,7 @@ import { createStyles, withStyles } from "@material-ui/core/styles";
 import TopBar from "./TopBar";
 import Settings from "./Settings";
 import GeneralData from "./GeneralData";
+import LocationSearchbar from "./LocationSearchbar";
 
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
@@ -31,7 +32,8 @@ class Main extends Component {
     windSpeedUnit: "KPH",
     minimumTemperature: 20,
     minimumWindSpeed: 15,
-    sliderValue: 0
+    sliderValue: 0,
+    currentCity: ""
   };
 
   render() {
@@ -55,6 +57,7 @@ class Main extends Component {
           onCloseSettings={this.closeSettingsMenu}
           onOpenSettings={this.openSettingsMenu}
         />
+        <LocationSearchbar onSelectNewCity={this.updateCurrentCity} />
         {isLoaded && (
           <h1 style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}>
             You can fly!
@@ -92,15 +95,21 @@ class Main extends Component {
 
   // This function queries the API, and if we receive a valid response we tidy
   // it up and store it in the state
-  fetchWeatherFromAPI = async () => {
+  fetchWeatherFromAPI = async currentCity => {
     let currentWeather;
-    const { lat, long } = this.state;
-    // If coordinates have been set, query by GPS position. Otherwise use
-    // automatic position (retrieved by IP)
-    const LOCATION = lat === null ? ":auto" : `${lat},${long}`;
+    let location;
+    // If no city specified by the users
+    if (!currentCity) {
+      const { lat, long } = this.state;
+      // If coordinates have been set, query by GPS position. Otherwise use
+      // automatic position (retrieved by IP)
+      location = lat === null ? ":auto" : `${lat},${long}`;
+    } else {
+      location = currentCity;
+    }
     // Fetch data from the API, sanitize it and store it.
     // Fetch current weather
-    fetch(`${BASE_URL}/${FETCH_CURRENT}/${LOCATION}?${OPTIONS_CURRENT}`)
+    fetch(`${BASE_URL}/${FETCH_CURRENT}/${location}?${OPTIONS_CURRENT}`)
       .then(res => res.json())
       .then(result => {
         if (!result.success) {
@@ -138,7 +147,7 @@ class Main extends Component {
       });
 
     // Fetch forecast for the next 23 hours
-    fetch(`${BASE_URL}/${FETCH_FORECAST}/${LOCATION}?${OPTIONS_FORECAST}`)
+    fetch(`${BASE_URL}/${FETCH_FORECAST}/${location}?${OPTIONS_FORECAST}`)
       .then(res => res.json())
       .then(result => {
         if (!result.success) {
@@ -193,6 +202,13 @@ class Main extends Component {
 
   updateSliderValue = sliderValue => {
     this.setState({ sliderValue });
+  };
+
+  updateCurrentCity = currentCity => {
+    if (currentCity) {
+      this.setState({ currentCity });
+      this.fetchWeatherFromAPI(currentCity);
+    }
   };
 
   checkIfCanFlyKite = () => {
