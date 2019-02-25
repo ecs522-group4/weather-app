@@ -8,18 +8,12 @@ import LocationOn from "@material-ui/icons/DateRange";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 class Calendar extends Component {
-  state = {
-    selectedDate: new Date()
-  };
-
   handleDateChange = date => {
-    this.setState({ selectedDate: date });
     this.props.onChangeDate(date);
   };
 
   render() {
-    const { classes, isForecastAvailable } = this.props;
-    const { selectedDate } = this.state;
+    const { classes, isForecastAvailable, selectedDate } = this.props;
 
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>

@@ -55,7 +55,8 @@ class Main extends Component {
       minimumWindSpeed,
       minimumTemperature,
       isValidCity,
-      isForecastAvailable
+      isForecastAvailable,
+      selectedDate
     } = this.state;
 
     return (
@@ -76,6 +77,7 @@ class Main extends Component {
             <Calendar
               onChangeDate={this.updateSelectedDate}
               isForecastAvailable={isForecastAvailable}
+              selectedDate={selectedDate}
             />
 
             <h1
@@ -271,6 +273,9 @@ class Main extends Component {
     if (currentCity) {
       this.setState({ currentCity });
       this.fetchTodayWeather(currentCity);
+      // Reset to today's date
+      const TODAY = new Date();
+      this.setState({ selectedDate: TODAY });
     }
   };
 
