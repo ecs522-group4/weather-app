@@ -4,6 +4,8 @@ import { createStyles, withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
+import LocationOn from "@material-ui/icons/DateRange";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 class Calendar extends Component {
   state = {
@@ -16,7 +18,7 @@ class Calendar extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, isForecastAvailable } = this.props;
     const { selectedDate } = this.state;
 
     return (
@@ -26,6 +28,13 @@ class Calendar extends Component {
             margin="normal"
             value={selectedDate}
             onChange={this.handleDateChange}
+            error={!isForecastAvailable}
+            helperText={
+              isForecastAvailable
+                ? null
+                : "Forecast not available for this date."
+            }
+            }}
           />
         </Grid>
       </MuiPickersUtilsProvider>

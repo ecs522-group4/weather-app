@@ -54,7 +54,8 @@ class Main extends Component {
       windSpeedUnit,
       minimumWindSpeed,
       minimumTemperature,
-      isValidCity
+      isValidCity,
+      isForecastAvailable
     } = this.state;
 
     return (
@@ -72,7 +73,10 @@ class Main extends Component {
               onSelectNewCity={this.updateCurrentCity}
               isValidCity={isValidCity}
             />
-            <Calendar onChangeDate={this.updateSelectedDate} />
+            <Calendar
+              onChangeDate={this.updateSelectedDate}
+              isForecastAvailable={isForecastAvailable}
+            />
 
             <h1
               style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}
@@ -87,6 +91,7 @@ class Main extends Component {
               windSpeedUnit={windSpeedUnit}
               onChangeSliderValue={this.updateSliderValue}
               isValidCity={isValidCity}
+              isForecastAvailable={isForecastAvailable}
             />
           </>
         ) : (
