@@ -1,15 +1,16 @@
 .moveK {
-  position: relative;
-  height: 30%;
+  animation: translate 5s ease-in-out infinite;
+}
+.kiteCSS {
+  position: absolute;
+  width: 55%;
   padding-right: 50%;
-  margin-top: -40%;
-  top: -10%;
-  left: -6%;
-  animation: translate 5s ease-in-out 0.9s infinite;
+  bottom: 60%;
+  left: -15%;
 }
 @keyframes translate {
   0% {
-    transform: translate(0, 0) rotate(0deg);
+    transform: translate(-4%, -2%) rotate(0deg);
   }
   25% {
     transform: translate(-7%, -12%) rotate(9deg);

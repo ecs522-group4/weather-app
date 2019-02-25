@@ -91,7 +91,7 @@ class Main extends Component {
             onChangeWindSpeed={this.changeminimumWindSpeed}
           />
         )}
-        <MovingKite />
+        <MovingKite isOkToFly={this.checkIfCanFlyKite()} />
       </div>
     );
   }
