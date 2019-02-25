@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
+import MovingKite from "./MovingKite";
 
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
@@ -41,6 +42,7 @@ class Main extends Component {
         <button onClick={this.updateWeatherBasedOnLocation}>
           Get weather for my location
         </button>
+        <MovingKite />
       </div>
     );
   }
