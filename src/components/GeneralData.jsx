@@ -20,7 +20,8 @@ class GeneralData extends Component {
       isLoaded,
       temperatureUnit,
       windSpeedUnit,
-      isValidCity
+      isValidCity,
+      isForecastAvailable
     } = this.props;
     const { sliderValue } = this.state;
     return (
@@ -48,14 +49,18 @@ class GeneralData extends Component {
         )}
         <h1 className={classes.container}>
           {isLoaded &&
+            isForecastAvailable &&
             this.getWindSpeedDataBasedOnUnit(sliderValue, windSpeedUnit)}
         </h1>
         <h1 className={classes.container}>
           {isLoaded &&
+            isForecastAvailable &&
             this.getTemperatureDataBasedOnUnit(sliderValue, temperatureUnit)}
         </h1>
         <h1 className={classes.container}>
-          {isLoaded && forecastWeather[sliderValue].weather}
+          {isLoaded &&
+            isForecastAvailable &&
+            forecastWeather[sliderValue].weather}
         </h1>
       </>
     );
