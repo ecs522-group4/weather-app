@@ -59,25 +59,28 @@ class Main extends Component {
           onOpenSettings={this.openSettingsMenu}
         />
 
-        <LocationSearchbar
-          onSelectNewCity={this.updateCurrentCity}
-          isValidCity={isValidCity}
-        />
-
-        <h1 style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}>
-          You can fly!
-        </h1>
-
         {isSettingsMenuOpen === false ? (
-          <GeneralData
-            isLoaded={isLoaded}
-            currentWeather={currentWeather}
-            forecastWeather={forecastWeather}
-            temperatureUnit={temperatureUnit}
-            windSpeedUnit={windSpeedUnit}
-            onChangeSliderValue={this.updateSliderValue}
-            isValidCity={isValidCity}
-          />
+          <>
+            <LocationSearchbar
+              onSelectNewCity={this.updateCurrentCity}
+              isValidCity={isValidCity}
+            />
+
+            <h1
+              style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}
+            >
+              You can fly!
+            </h1>
+            <GeneralData
+              isLoaded={isLoaded}
+              currentWeather={currentWeather}
+              forecastWeather={forecastWeather}
+              temperatureUnit={temperatureUnit}
+              windSpeedUnit={windSpeedUnit}
+              onChangeSliderValue={this.updateSliderValue}
+              isValidCity={isValidCity}
+            />
+          </>
         ) : (
           <Settings
             temperatureUnit={temperatureUnit}
