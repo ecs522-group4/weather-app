@@ -56,7 +56,8 @@ class Main extends Component {
       minimumTemperature,
       isValidCity,
       isForecastAvailable,
-      selectedDate
+      selectedDate,
+      sliderValue
     } = this.state;
 
     return (
@@ -94,6 +95,7 @@ class Main extends Component {
               onChangeSliderValue={this.updateSliderValue}
               isValidCity={isValidCity}
               isForecastAvailable={isForecastAvailable}
+              sliderValue={sliderValue}
             />
           </>
         ) : (
