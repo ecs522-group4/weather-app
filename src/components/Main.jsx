@@ -4,6 +4,7 @@ import TopBar from "./TopBar";
 import Settings from "./Settings";
 import GeneralData from "./GeneralData";
 import LocationSearchbar from "./LocationSearchbar";
+import Calendar from "./Calendar";
 
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
@@ -65,6 +66,7 @@ class Main extends Component {
               onSelectNewCity={this.updateCurrentCity}
               isValidCity={isValidCity}
             />
+            <Calendar />
 
             <h1
               style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}
