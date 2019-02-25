@@ -4,12 +4,7 @@ import Slider from "@material-ui/lab/Slider";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 class GeneralData extends Component {
-  state = {
-    sliderValue: 0
-  };
-
   handleChange = (event, sliderValue) => {
-    this.setState({ sliderValue });
     this.props.onChangeSliderValue(sliderValue);
   };
 
@@ -21,9 +16,9 @@ class GeneralData extends Component {
       temperatureUnit,
       windSpeedUnit,
       isValidCity,
-      isForecastAvailable
+      isForecastAvailable,
+      sliderValue
     } = this.props;
-    const { sliderValue } = this.state;
     return (
       <>
         <div className={classes.sliderContainer}>
