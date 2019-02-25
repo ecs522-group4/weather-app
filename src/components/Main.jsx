@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
 import MovingKite from "./MovingKite";
+import TopBar from "./TopBar";
+import Settings from "./Settings";
+import GeneralData from "./GeneralData";
+import LocationSearchbar from "./LocationSearchbar";
 
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
@@ -22,26 +26,71 @@ class Main extends Component {
     // Stores an object with weather information for the next 23 hours
     forecastWeather: "",
     // Indicates if we received the API data correctly
-    isLoaded: false
+    isLoaded: false,
+    isSettingsMenuOpen: false,
+    // Default settings. User can change these in the Settings
+    temperatureUnit: "C",
+    windSpeedUnit: "KPH",
+    minimumTemperature: 20,
+    minimumWindSpeed: 15,
+    sliderValue: 0,
+    isValidCity: true
   };
 
   render() {
     const { classes } = this.props;
-    const { currentWeather, isLoaded } = this.state;
+    const {
+      currentWeather,
+      forecastWeather,
+      isLoaded,
+      isSettingsMenuOpen,
+      temperatureUnit,
+      windSpeedUnit,
+      minimumWindSpeed,
+      minimumTemperature,
+      isValidCity
+    } = this.state;
 
     return (
       <div className={classes.container}>
-        <h1>Weather App</h1>
-        <p>Weather: {isLoaded && currentWeather.weatherShort}</p>
-        <p>Temperature: {isLoaded && currentWeather.tempC}</p>
-        <p>Wind speed: {isLoaded && currentWeather.windKPH}</p>
-        <p>
-          Place: {isLoaded && currentWeather.cityName},{" "}
-          {isLoaded && currentWeather.countryName}
-        </p>
-        <button onClick={this.updateWeatherBasedOnLocation}>
-          Get weather for my location
-        </button>
+        <TopBar
+          isSettingsMenuOpen={isSettingsMenuOpen}
+          onRefresh={this.updateWeatherBasedOnLocation}
+          onCloseSettings={this.closeSettingsMenu}
+          onOpenSettings={this.openSettingsMenu}
+        />
+
+        <LocationSearchbar
+          onSelectNewCity={this.updateCurrentCity}
+          isValidCity={isValidCity}
+        />
+
+        <h1 style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}>
+          You can fly!
+        </h1>
+
+        {isSettingsMenuOpen === false ? (
+          <GeneralData
+            isLoaded={isLoaded}
+            currentWeather={currentWeather}
+            forecastWeather={forecastWeather}
+            temperatureUnit={temperatureUnit}
+            windSpeedUnit={windSpeedUnit}
+            onChangeSliderValue={this.updateSliderValue}
+            isValidCity={isValidCity}
+          />
+        ) : (
+          <Settings
+            temperatureUnit={temperatureUnit}
+            windSpeedUnit={windSpeedUnit}
+            minimumWindSpeed={minimumWindSpeed}
+            minimumTemperature={minimumTemperature}
+            onChangeTemperatureUnit={this.changeTemperatureUnit}
+            onChangeSpeedUnit={this.changeSpeedUnit}
+            onChangeTemperature={this.changeminimumTemperature}
+            onChangeWindSpeed={this.changeminimumWindSpeed}
+          />
+        )}
         <MovingKite />
       </div>
     );
@@ -54,60 +103,76 @@ class Main extends Component {
 
   // This function queries the API, and if we receive a valid response we tidy
   // it up and store it in the state
-  fetchWeatherFromAPI = async () => {
-    const { lat, long } = this.state;
-    // If coordinates have been set, query by GPS position. Otherwise use
-    // automatic position (retrieved by IP)
-    const LOCATION = lat === null ? ":auto" : `${lat},${long}`;
+  fetchWeatherFromAPI = async currentCity => {
+    this.setState({ isLoaded: false });
+    let currentWeather;
+    let location;
+    // If no city specified by the users
+    if (!currentCity) {
+      const { lat, long } = this.state;
+      // If coordinates have been set, query by GPS position. Otherwise use
+      // automatic position (retrieved by IP)
+      location = lat === null ? ":auto" : `${lat},${long}`;
+    } else {
+      location = currentCity;
+    }
     // Fetch data from the API, sanitize it and store it.
     // Fetch current weather
-    fetch(`${BASE_URL}/${FETCH_CURRENT}/${LOCATION}?${OPTIONS_CURRENT}`)
+    fetch(`${BASE_URL}/${FETCH_CURRENT}/${location}?${OPTIONS_CURRENT}`)
       .then(res => res.json())
       .then(result => {
         if (!result.success) {
           console.error("Current API call failed", result.error);
         } else {
-          const currentWeather = {
-            placeName: result.response.place.name,
-            cityName: result.response.place.city,
-            countryName: result.response.place.country,
-            dateTime: result.response.obDateTime,
-            tempC: result.response.ob.tempC,
-            tempF: result.response.ob.tempF,
-            humidity: result.response.ob.humidity,
-            windKTS: result.response.ob.windSpeedKTS,
-            windKPH: result.response.ob.windSpeedKPH,
-            windMPH: result.response.ob.windSpeedMPH,
-            windDirDeg: result.response.ob.windDirDEG,
-            windDir: result.response.ob.windDir,
-            windGustKTS: result.response.ob.windGustKTS,
-            windGustKPH: result.response.ob.windGustKPH,
-            windGustMPH: result.response.ob.windGustMPH,
-            weather: result.response.ob.weather,
-            weatherShort: result.response.ob.weatherShort,
-            windchillC: result.response.ob.windchillC,
-            windchillF: result.response.ob.windchillF,
-            feelsLikeC: result.response.ob.feelsLikeC,
-            feelsLikeF: result.response.ob.feelsLikeF,
-            isDay: result.response.ob.isDay,
-            sunrise: result.response.ob.sunriseISO,
-            sunset: result.response.ob.sunsetISO,
-            skyCoverage: result.response.ob.sky
-          };
-          this.setState({ currentWeather });
-        }
-      });
-
-    // Fetch forecast for the next 23 hours
-    fetch(`${BASE_URL}/${FETCH_FORECAST}/${LOCATION}?${OPTIONS_FORECAST}`)
-      .then(res => res.json())
-      .then(result => {
-        if (!result.success) {
-          console.error("Forecast API call failed", result.error);
-          this.setState({ isLoaded: false });
-        } else {
-          const forecastWeather = result.response[0].periods;
-          this.setState({ forecastWeather, isLoaded: true });
+          // Update the place only if it exists in the API
+          if (result.response.place) {
+            currentWeather = {
+              placeName: result.response.place.name,
+              cityName: result.response.place.city,
+              countryName: result.response.place.country,
+              dateTime: result.response.obDateTime,
+              tempC: result.response.ob.tempC,
+              tempF: result.response.ob.tempF,
+              humidity: result.response.ob.humidity,
+              windSpeedKTS: result.response.ob.windSpeedKTS,
+              windSpeedKPH: result.response.ob.windSpeedKPH,
+              windSpeedMPH: result.response.ob.windSpeedMPH,
+              windDirDEG: result.response.ob.windDirDEG,
+              windDir: result.response.ob.windDir,
+              windGustKTS: result.response.ob.windGustKTS,
+              windGustKPH: result.response.ob.windGustKPH,
+              windGustMPH: result.response.ob.windGustMPH,
+              weather: result.response.ob.weather,
+              weatherShort: result.response.ob.weatherShort,
+              windchillC: result.response.ob.windchillC,
+              windchillF: result.response.ob.windchillF,
+              feelsLikeC: result.response.ob.feelsLikeC,
+              feelsLikeF: result.response.ob.feelsLikeF,
+              isDay: result.response.ob.isDay,
+              sunriseISO: result.response.ob.sunriseISO,
+              sunsetISO: result.response.ob.sunsetISO,
+              sky: result.response.ob.sky
+            };
+            this.setState({ currentWeather, isValidCity: true });
+            // Fetch forecast for the next 23 hours
+            fetch(
+              `${BASE_URL}/${FETCH_FORECAST}/${location}?${OPTIONS_FORECAST}`
+            )
+              .then(res => res.json())
+              .then(result => {
+                if (!result.success) {
+                  console.error("Forecast API call failed", result.error);
+                } else {
+                  const forecastWeather = result.response[0].periods;
+                  // Adding the currentWeather at the beginning of the forecast array
+                  forecastWeather.unshift(currentWeather);
+                  this.setState({ forecastWeather, isLoaded: true });
+                }
+              });
+          } else {
+            console.error("Place not supported");
+            this.setState({ isValidCity: false });
+          }
         }
       });
   };
@@ -125,17 +190,78 @@ class Main extends Component {
       }
     );
   };
+
+  closeSettingsMenu = () => {
+    this.setState({ isSettingsMenuOpen: false });
+  };
+
+  openSettingsMenu = () => {
+    this.setState({ isSettingsMenuOpen: true });
+  };
+
+  changeTemperatureUnit = temperatureUnit => {
+    this.setState({ temperatureUnit });
+  };
+
+  changeSpeedUnit = windSpeedUnit => {
+    this.setState({ windSpeedUnit });
+  };
+
+  changeminimumWindSpeed = minimumWindSpeed => {
+    this.setState({ minimumWindSpeed });
+  };
+
+  changeminimumTemperature = minimumTemperature => {
+    this.setState({ minimumTemperature });
+  };
+
+  updateSliderValue = sliderValue => {
+    this.setState({ sliderValue });
+  };
+
+  updateCurrentCity = currentCity => {
+    if (currentCity) {
+      this.setState({ currentCity });
+      this.fetchWeatherFromAPI(currentCity);
+    }
+  };
+
+  checkIfCanFlyKite = () => {
+    const {
+      minimumWindSpeed,
+      minimumTemperature,
+      temperatureUnit,
+      windSpeedUnit,
+      forecastWeather,
+      sliderValue,
+      isLoaded
+    } = this.state;
+    if (isLoaded) {
+      const temperature =
+        temperatureUnit === "C"
+          ? forecastWeather[sliderValue].tempC
+          : forecastWeather[sliderValue].tempF;
+      const windSpeed =
+        windSpeedUnit === "KPH"
+          ? forecastWeather[sliderValue].windSpeedKPH
+          : windSpeedUnit === "MPH"
+          ? forecastWeather[sliderValue].windSpeedMPH
+          : forecastWeather[sliderValue].windSpeedKTS;
+
+      if (temperature >= minimumTemperature && windSpeed >= minimumWindSpeed) {
+        return true;
+      }
+      return false;
+    }
+  };
 }
 
 const styles = createStyles({
   container: {
     display: "flex",
     flexDirection: "column",
-    width: "414px",
-    height: "736px",
     textAlign: "center",
-    margin: "0 auto",
-    backgroundColor: "#fafafa"
+    margin: "0 auto"
   }
 });
 

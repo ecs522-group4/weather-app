@@ -1,3 +1,9 @@
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -6,7 +12,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #707070;
+  background-color: #fafafa;
+  background-image: url("./assets/backgrounds/mainBG.png");
+  background-size: cover;
 }
 
 code {
