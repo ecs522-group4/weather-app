@@ -34,6 +34,12 @@ class Calendar extends Component {
                 ? null
                 : "Forecast not available for this date."
             }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment>
+                  <LocationOn />
+                </InputAdornment>
+              )
             }}
           />
         </Grid>
