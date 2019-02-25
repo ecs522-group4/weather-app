@@ -13,7 +13,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #fafafa;
-  background-image: url("./assets/backgrounds/mainBG.png");
+  background-image: url("./assets/backgrounds/main.png");
   background-size: cover;
 }
 
