@@ -41,7 +41,8 @@ class Main extends Component {
     isValidCity: true,
     selectedDate: new Date(),
     // Displays an error if users select a day too far in the future
-    isForecastAvailable: true
+    isForecastAvailable: true,
+    listOfToggledOptions: ["daytime"]
   };
 
   render() {
@@ -58,7 +59,8 @@ class Main extends Component {
       isValidCity,
       isForecastAvailable,
       selectedDate,
-      sliderValue
+      sliderValue,
+      listOfToggledOptions
     } = this.state;
 
     return (
@@ -105,6 +107,8 @@ class Main extends Component {
             onChangeSpeedUnit={this.changeSpeedUnit}
             onChangeTemperature={this.changeminimumTemperature}
             onChangeWindSpeed={this.changeminimumWindSpeed}
+            listOfToggledOptions={listOfToggledOptions}
+            onToggleOptions={this.updateToggledOptions}
           />
         )}
       </div>
@@ -137,13 +141,15 @@ class Main extends Component {
       const minimumTemperature = storedData.minimumTemperature || 10;
       const minimumWindSpeed = storedData.minimumWindSpeed || 15;
       const currentCity = storedData.currentCity || "London, UK";
+      const listOfToggledOptions = storedData.toggledOptions || ["daytime"];
 
       this.setState({
         temperatureUnit,
         windSpeedUnit,
         minimumTemperature,
         minimumWindSpeed,
-        currentCity
+        currentCity,
+        listOfToggledOptions
       });
     }
   };
@@ -155,7 +161,8 @@ class Main extends Component {
       windSpeedUnit: this.state.windSpeedUnit,
       minimumTemperature: this.state.minimumTemperature,
       minimumWindSpeed: this.state.minimumWindSpeed,
-      currentCity: this.state.currentCity
+      currentCity: this.state.currentCity,
+      toggledOptions: this.state.listOfToggledOptions
     };
     localStorage.setItem("whetherwind", JSON.stringify(dataToStore));
   };
@@ -322,6 +329,10 @@ class Main extends Component {
     }
   };
 
+  updateToggledOptions = listOfToggledOptions => {
+    this.setState({ listOfToggledOptions });
+  };
+
   checkIfCanFlyKite = () => {
     const {
       minimumWindSpeed,
@@ -330,7 +341,8 @@ class Main extends Component {
       windSpeedUnit,
       forecastWeather,
       sliderValue,
-      isLoaded
+      isLoaded,
+      listOfToggledOptions
     } = this.state;
     if (isLoaded) {
       const temperature =
@@ -343,11 +355,29 @@ class Main extends Component {
           : windSpeedUnit === "MPH"
           ? forecastWeather[sliderValue].windSpeedMPH
           : forecastWeather[sliderValue].windSpeedKTS;
+      const flyOnlyDaytime = listOfToggledOptions.includes("daytime");
+      const isDay = forecastWeather[sliderValue].isDay;
 
-      if (temperature >= minimumTemperature && windSpeed >= minimumWindSpeed) {
-        return true;
+      // If user selected the "Fly in daytime only" option, need additional check
+      // against isDay
+      if (flyOnlyDaytime) {
+        if (
+          temperature >= minimumTemperature &&
+          windSpeed >= minimumWindSpeed &&
+          isDay
+        ) {
+          return true;
+        }
+        return false;
+      } else {
+        if (
+          temperature >= minimumTemperature &&
+          windSpeed >= minimumWindSpeed
+        ) {
+          return true;
+        }
+        return false;
       }
-      return false;
     }
   };
 

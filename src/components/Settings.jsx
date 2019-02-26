@@ -37,13 +37,15 @@ class Settings extends Component {
       temperatureUnit,
       windSpeedUnit,
       minimumWindSpeed,
-      minimumTemperature
+      minimumTemperature,
+      listOfToggledOptions
     } = this.props;
     this.setState({
       temperatureUnit,
       windSpeedUnit,
       windSpeed: minimumWindSpeed,
-      temperature: minimumTemperature
+      temperature: minimumTemperature,
+      checked: listOfToggledOptions
     });
   };
 
@@ -53,6 +55,7 @@ class Settings extends Component {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
+    // Add or remove from array based on toggle status
     if (currentIndex === -1) {
       newChecked.push(value);
     } else {
@@ -62,6 +65,8 @@ class Settings extends Component {
     this.setState({
       checked: newChecked
     });
+
+    this.props.onToggleOptions(newChecked);
   };
 
   handleDecreaseWindSpeed = () => {
