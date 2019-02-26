@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
+import MovingKite from "./MovingKite";
 import TopBar from "./TopBar";
 import Settings from "./Settings";
 import GeneralData from "./GeneralData";
@@ -110,6 +111,7 @@ class Main extends Component {
             onChangeWindSpeed={this.changeminimumWindSpeed}
           />
         )}
+        <MovingKite isOkToFly={this.checkIfCanFlyKite()} />
       </div>
     );
   }
