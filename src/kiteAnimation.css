@@ -5,8 +5,9 @@
   position: absolute;
   width: 55%;
   padding-right: 50%;
-  top: 30%;
+  top: 12%;
   left: -15%;
+  z-index: -1;
 }
 @keyframes translate {
   0% {

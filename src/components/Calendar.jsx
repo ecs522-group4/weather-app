@@ -43,7 +43,9 @@ class Calendar extends Component {
 }
 const styles = createStyles({
   grid: {
-    width: "60%"
+    width: "100%",
+    zIndex: 5,
+    justifyContent: "flex-end"
   }
 });
 

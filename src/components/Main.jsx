@@ -72,6 +72,7 @@ class Main extends Component {
 
         {isSettingsMenuOpen === false ? (
           <>
+            <MovingKite isOkToFly={this.checkIfCanFlyKite()} />
             <LocationSearchbar
               onSelectNewCity={this.updateCurrentCity}
               isValidCity={isValidCity}
@@ -81,12 +82,6 @@ class Main extends Component {
               isForecastAvailable={isForecastAvailable}
               selectedDate={selectedDate}
             />
-
-            <h1
-              style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}
-            >
-              You can fly!
-            </h1>
             <GeneralData
               isLoaded={isLoaded}
               currentWeather={currentWeather}
@@ -111,7 +106,6 @@ class Main extends Component {
             onChangeWindSpeed={this.changeminimumWindSpeed}
           />
         )}
-        <MovingKite isOkToFly={this.checkIfCanFlyKite()} />
       </div>
     );
   }
@@ -328,7 +322,8 @@ const styles = createStyles({
     display: "flex",
     flexDirection: "column",
     textAlign: "center",
-    margin: "0 auto"
+    margin: "0 auto",
+    maxWidth: 600
   }
 });
 
