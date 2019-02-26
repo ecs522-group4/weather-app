@@ -5,6 +5,7 @@ import TopBar from "./TopBar";
 import Settings from "./Settings";
 import GeneralData from "./GeneralData";
 import LocationSearchbar from "./LocationSearchbar";
+import Calendar from "./Calendar";
 
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
@@ -15,7 +16,9 @@ const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET;
 const KEYS = `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`;
 const OPTIONS_CURRENT = `%format=json&filter=allstations&limit=1&${KEYS}`;
 const OPTIONS_FORECAST = `format=json&filter=1hr&limit=23&${KEYS}`;
-
+// Requesting only certain data to improve the speed of the response
+const DATA_TO_INCLUDE = `fields=periods.dateTimeISO,periods.tempC,periods.tempF,periods.windDirDEG,periods.windSpeedKTS,periods.windSpeedKPH,periods.windSpeedMPH,periods.weather,periods.isDay`;
+const OPTIONS_CALENDAR_FORECAST = `&to=+day?&format=json&filter=1hr&limit=24&${DATA_TO_INCLUDE}&${KEYS}`;
 class Main extends Component {
   state = {
     // Coordinates for query
@@ -34,7 +37,11 @@ class Main extends Component {
     minimumTemperature: 20,
     minimumWindSpeed: 15,
     sliderValue: 0,
-    isValidCity: true
+    currentCity: "",
+    isValidCity: true,
+    selectedDate: new Date(),
+    // Displays an error if users select a day too far in the future
+    isForecastAvailable: true
   };
 
   render() {
@@ -48,7 +55,10 @@ class Main extends Component {
       windSpeedUnit,
       minimumWindSpeed,
       minimumTemperature,
-      isValidCity
+      isValidCity,
+      isForecastAvailable,
+      selectedDate,
+      sliderValue
     } = this.state;
 
     return (
@@ -60,25 +70,35 @@ class Main extends Component {
           onOpenSettings={this.openSettingsMenu}
         />
 
-        <LocationSearchbar
-          onSelectNewCity={this.updateCurrentCity}
-          isValidCity={isValidCity}
-        />
-
-        <h1 style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}>
-          You can fly!
-        </h1>
-
         {isSettingsMenuOpen === false ? (
-          <GeneralData
-            isLoaded={isLoaded}
-            currentWeather={currentWeather}
-            forecastWeather={forecastWeather}
-            temperatureUnit={temperatureUnit}
-            windSpeedUnit={windSpeedUnit}
-            onChangeSliderValue={this.updateSliderValue}
-            isValidCity={isValidCity}
-          />
+          <>
+            <LocationSearchbar
+              onSelectNewCity={this.updateCurrentCity}
+              isValidCity={isValidCity}
+            />
+            <Calendar
+              onChangeDate={this.updateSelectedDate}
+              isForecastAvailable={isForecastAvailable}
+              selectedDate={selectedDate}
+            />
+
+            <h1
+              style={{ display: this.checkIfCanFlyKite() ? "block" : "none" }}
+            >
+              You can fly!
+            </h1>
+            <GeneralData
+              isLoaded={isLoaded}
+              currentWeather={currentWeather}
+              forecastWeather={forecastWeather}
+              temperatureUnit={temperatureUnit}
+              windSpeedUnit={windSpeedUnit}
+              onChangeSliderValue={this.updateSliderValue}
+              isValidCity={isValidCity}
+              isForecastAvailable={isForecastAvailable}
+              sliderValue={sliderValue}
+            />
+          </>
         ) : (
           <Settings
             temperatureUnit={temperatureUnit}
@@ -98,12 +118,12 @@ class Main extends Component {
 
   async componentDidMount() {
     // Fetch weather data as soon as we load the app
-    this.fetchWeatherFromAPI();
+    this.fetchTodayWeather();
   }
 
   // This function queries the API, and if we receive a valid response we tidy
   // it up and store it in the state
-  fetchWeatherFromAPI = async currentCity => {
+  fetchTodayWeather = async currentCity => {
     this.setState({ isLoaded: false });
     let currentWeather;
     let location;
@@ -177,13 +197,47 @@ class Main extends Component {
       });
   };
 
+  fetchAnyDateWeather = async (currentCity, date) => {
+    this.setState({ isLoaded: false, isForecastAvailable: true });
+    let location;
+    // If no city specified by the users
+    if (!currentCity) {
+      const { lat, long } = this.state;
+      // If coordinates have been set, query by GPS position. Otherwise use
+      // automatic position (retrieved by IP)
+      location = lat === null ? ":auto" : `${lat},${long}`;
+    } else {
+      location = currentCity;
+    }
+    // Fetch forecast from 00:00AM of the date specified by the user till
+    // midnight. A complete 24 hours window
+    fetch(
+      `${BASE_URL}/${FETCH_FORECAST}/${location}?from=${date}${OPTIONS_CALENDAR_FORECAST}`
+    )
+      .then(res => res.json())
+      .then(result => {
+        if (!result.success) {
+          console.error("Forecast API call failed", result.error);
+        } else {
+          const forecastWeather = result.response[0].periods;
+          // If API returns less than 24 results (i.e. forecast not available),
+          // throw an error
+          if (forecastWeather.length < 24) {
+            this.setState({ isForecastAvailable: false, isLoaded: true });
+          } else {
+            this.setState({ forecastWeather, isLoaded: true });
+          }
+        }
+      });
+  };
+
   // This function retrieves Users' position, then updates the state with the
   // GPS data and queries the API.
   updateWeatherBasedOnLocation = async () => {
     navigator.geolocation.getCurrentPosition(
       pos => {
         this.setState({ lat: pos.coords.latitude, long: pos.coords.longitude });
-        this.fetchWeatherFromAPI();
+        this.fetchTodayWeather();
       },
       err => {
         console.error(err);
@@ -222,7 +276,10 @@ class Main extends Component {
   updateCurrentCity = currentCity => {
     if (currentCity) {
       this.setState({ currentCity });
-      this.fetchWeatherFromAPI(currentCity);
+      this.fetchTodayWeather(currentCity);
+      // Reset to today's date
+      const TODAY = new Date();
+      this.setState({ selectedDate: TODAY });
     }
   };
 
@@ -254,8 +311,18 @@ class Main extends Component {
       return false;
     }
   };
-}
 
+  updateSelectedDate = selectedDate => {
+    if (selectedDate) {
+      const date = new Date(selectedDate);
+      // Format the date to correctly query the API
+      const formatted_date = `${date.getFullYear()}-${date.getMonth() +
+        1}-${date.getDate()}`;
+      this.setState({ selectedDate });
+      this.fetchAnyDateWeather(this.state.currentCity, formatted_date);
+    }
+  };
+}
 const styles = createStyles({
   container: {
     display: "flex",

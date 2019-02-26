@@ -4,12 +4,7 @@ import Slider from "@material-ui/lab/Slider";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 class GeneralData extends Component {
-  state = {
-    sliderValue: 0
-  };
-
   handleChange = (event, sliderValue) => {
-    this.setState({ sliderValue });
     this.props.onChangeSliderValue(sliderValue);
   };
 
@@ -20,11 +15,12 @@ class GeneralData extends Component {
       isLoaded,
       temperatureUnit,
       windSpeedUnit,
-      isValidCity
+      isValidCity,
+      isForecastAvailable,
+      sliderValue
     } = this.props;
-    const { sliderValue } = this.state;
     return (
-      <>
+      <div>
         <div className={classes.sliderContainer}>
           {/* the forecastWeather array has 23 elements (0-22 index).
               the slider has a range between 0-23 to allow us to assign the 0
@@ -48,16 +44,35 @@ class GeneralData extends Component {
         )}
         <h1 className={classes.container}>
           {isLoaded &&
+            isForecastAvailable &&
             this.getWindSpeedDataBasedOnUnit(sliderValue, windSpeedUnit)}
         </h1>
         <h1 className={classes.container}>
           {isLoaded &&
+            isForecastAvailable &&
             this.getTemperatureDataBasedOnUnit(sliderValue, temperatureUnit)}
         </h1>
+        {isLoaded &&
+          isForecastAvailable &&
+          forecastWeather[sliderValue].windDirDEG && (
+            <img
+              src={require("../assets/icons/arrow.svg")}
+              alt="arrow indicating wind direction"
+              className={classes.arrowIcon}
+              style={{
+                transform: `rotate(${
+                  forecastWeather[sliderValue].windDirDEG
+                }deg)`
+              }}
+            />
+          )}
+
         <h1 className={classes.container}>
-          {isLoaded && forecastWeather[sliderValue].weather}
+          {isLoaded &&
+            isForecastAvailable &&
+            forecastWeather[sliderValue].weather}
         </h1>
-      </>
+      </div>
     );
   }
 
@@ -88,8 +103,7 @@ const styles = createStyles({
     color: "#191919",
     fontFamily: "Avenir Next",
     fontSize: "170%",
-    display: "flex",
-    flexDirection: "column",
+    display: "inline-block",
     width: "60%",
     height: "20%",
     textAlign: "left",
@@ -105,6 +119,12 @@ const styles = createStyles({
   loadingContainer: {
     width: "100%",
     margin: "20px auto"
+  },
+  arrowIcon: {
+    position: "absolute",
+    right: "20%",
+    width: "10vw",
+    height: "10vw"
   }
 });
 

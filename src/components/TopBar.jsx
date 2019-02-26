@@ -9,7 +9,7 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import CheckIcon from "@material-ui/icons/Check";
 
-class ClassName extends Component {
+class TopBar extends Component {
   state = {
     isSettingsMenuOpen: false
   };
@@ -103,4 +103,4 @@ const styles = createStyles({
   }
 });
 
-export default withStyles(styles)(ClassName);
+export default withStyles(styles)(TopBar);
