@@ -341,7 +341,8 @@ class Main extends Component {
       windSpeedUnit,
       forecastWeather,
       sliderValue,
-      isLoaded
+      isLoaded,
+      listOfToggledOptions
     } = this.state;
     if (isLoaded) {
       const temperature =
@@ -354,11 +355,29 @@ class Main extends Component {
           : windSpeedUnit === "MPH"
           ? forecastWeather[sliderValue].windSpeedMPH
           : forecastWeather[sliderValue].windSpeedKTS;
+      const flyOnlyDaytime = listOfToggledOptions.includes("daytime");
+      const isDay = forecastWeather[sliderValue].isDay;
 
-      if (temperature >= minimumTemperature && windSpeed >= minimumWindSpeed) {
-        return true;
+      // If user selected the "Fly in daytime only" option, need additional check
+      // against isDay
+      if (flyOnlyDaytime) {
+        if (
+          temperature >= minimumTemperature &&
+          windSpeed >= minimumWindSpeed &&
+          isDay
+        ) {
+          return true;
+        }
+        return false;
+      } else {
+        if (
+          temperature >= minimumTemperature &&
+          windSpeed >= minimumWindSpeed
+        ) {
+          return true;
+        }
+        return false;
       }
-      return false;
     }
   };
 
