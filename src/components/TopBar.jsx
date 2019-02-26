@@ -28,6 +28,10 @@ class TopBar extends Component {
     this.setState({ isSettingsMenuOpen: true });
   };
 
+  handleSaveSettings = () => {
+    this.props.onSaveSettings();
+  };
+
   render() {
     const { classes } = this.props;
     const { isSettingsMenuOpen } = this.state;
@@ -72,7 +76,11 @@ class TopBar extends Component {
               </IconButton>
             )}
             {isSettingsMenuOpen && (
-              <IconButton color="inherit" aria-label="Save">
+              <IconButton
+                color="inherit"
+                aria-label="Save"
+                onClick={this.handleSaveSettings}
+              >
                 <CheckIcon />
               </IconButton>
             )}
