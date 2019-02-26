@@ -34,7 +34,7 @@ class Main extends Component {
     // Default settings. User can change these in the Settings
     temperatureUnit: "C",
     windSpeedUnit: "KPH",
-    minimumTemperature: 20,
+    minimumTemperature: 10,
     minimumWindSpeed: 15,
     sliderValue: 0,
     currentCity: "",
@@ -68,6 +68,7 @@ class Main extends Component {
           onRefresh={this.updateWeatherBasedOnLocation}
           onCloseSettings={this.closeSettingsMenu}
           onOpenSettings={this.openSettingsMenu}
+          onSaveSettings={this.saveStateToLocalStorage}
         />
 
         {isSettingsMenuOpen === false ? (
@@ -110,10 +111,54 @@ class Main extends Component {
     );
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    // Retrieve data from localStorage
+    this.setStateFromLocalStorage();
     // Fetch weather data as soon as we load the app
     this.fetchTodayWeather();
+    // add event listener to save state to localStorage  when user
+    // leaves/refreshes the page
+    window.addEventListener("beforeunload", this.saveStateToLocalStorage);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener("beforeunload", this.saveStateToLocalStorage);
+    // saves if component has a chance to unmount
+    this.saveStateToLocalStorage();
+  }
+
+  // Retrieve data from localStorage and update state or use defaul values
+  setStateFromLocalStorage = () => {
+    const storedData = JSON.parse(localStorage.getItem("whetherwind")) || null;
+    // Update state only if data is available
+    if (storedData) {
+      const temperatureUnit = storedData.temperatureUnit || "C";
+      const windSpeedUnit = storedData.windSpeedUnit || "KPH";
+      const minimumTemperature = storedData.minimumTemperature || 10;
+      const minimumWindSpeed = storedData.minimumWindSpeed || 15;
+      const currentCity = storedData.currentCity || "London";
+
+      this.setState({
+        temperatureUnit,
+        windSpeedUnit,
+        minimumTemperature,
+        minimumWindSpeed,
+        currentCity
+      });
+    }
+  };
+
+  // Save data we want to store in the localStorage
+  saveStateToLocalStorage = () => {
+    const dataToStore = {
+      temperatureUnit: this.state.temperatureUnit,
+      windSpeedUnit: this.state.windSpeedUnit,
+      minimumTemperature: this.state.minimumTemperature,
+      minimumWindSpeed: this.state.minimumWindSpeed,
+      currentCity: this.state.currentCity
+    };
+    localStorage.setItem("whetherwind", JSON.stringify(dataToStore));
+  };
 
   // This function queries the API, and if we receive a valid response we tidy
   // it up and store it in the state
