@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import "./animation.css";
+import "./kiteAnimation.css";
 import Main from "./components/Main";
 import * as serviceWorker from "./serviceWorker";
 
