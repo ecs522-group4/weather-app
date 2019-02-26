@@ -134,6 +134,22 @@ class LocationSearchbar extends Component {
     suggestions: []
   };
 
+  componentDidMount() {
+    // Retrieve data from localStorage (or default value) and display it in the
+    // Location Searchbar
+    const storedData = JSON.parse(localStorage.getItem("whetherwind")) || null;
+    if (storedData) {
+      const currentCity = storedData.currentCity || "London, UK";
+      if (currentCity) {
+        // Needs to be formatted to correctly update the value of the Location
+        // Searchbar
+        let formattedCity = currentCity.split(",");
+        formattedCity = { label: formattedCity[0], value: formattedCity[1] };
+        this.setState({ locationQuery: formattedCity });
+      }
+    }
+  }
+
   handleSelectNewCity = name => value => {
     let cleanValue = { ...value };
     // Take just the city name (e.g. "London, England, UK" to "London")

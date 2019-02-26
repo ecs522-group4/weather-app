@@ -115,7 +115,7 @@ class Main extends Component {
     // Retrieve data from localStorage
     this.setStateFromLocalStorage();
     // Fetch weather data as soon as we load the app
-    this.fetchTodayWeather();
+    this.fetchTodayWeather(this.state.currentCity);
     // add event listener to save state to localStorage  when user
     // leaves/refreshes the page
     window.addEventListener("beforeunload", this.saveStateToLocalStorage);
@@ -136,7 +136,7 @@ class Main extends Component {
       const windSpeedUnit = storedData.windSpeedUnit || "KPH";
       const minimumTemperature = storedData.minimumTemperature || 10;
       const minimumWindSpeed = storedData.minimumWindSpeed || 15;
-      const currentCity = storedData.currentCity || "London";
+      const currentCity = storedData.currentCity || "London, UK";
 
       this.setState({
         temperatureUnit,
@@ -162,7 +162,7 @@ class Main extends Component {
 
   // This function queries the API, and if we receive a valid response we tidy
   // it up and store it in the state
-  fetchTodayWeather = async currentCity => {
+  fetchTodayWeather = currentCity => {
     this.setState({ isLoaded: false });
     let currentWeather;
     let location;
@@ -236,7 +236,7 @@ class Main extends Component {
       });
   };
 
-  fetchAnyDateWeather = async (currentCity, date) => {
+  fetchAnyDateWeather = (currentCity, date) => {
     this.setState({ isLoaded: false, isForecastAvailable: true });
     let location;
     // If no city specified by the users
@@ -272,7 +272,7 @@ class Main extends Component {
 
   // This function retrieves Users' position, then updates the state with the
   // GPS data and queries the API.
-  updateWeatherBasedOnLocation = async () => {
+  updateWeatherBasedOnLocation = () => {
     navigator.geolocation.getCurrentPosition(
       pos => {
         this.setState({ lat: pos.coords.latitude, long: pos.coords.longitude });
