@@ -47,11 +47,6 @@ class GeneralData extends Component {
             isForecastAvailable &&
             this.getWindSpeedDataBasedOnUnit(sliderValue, windSpeedUnit)}
         </h1>
-        <h1 className={classes.container}>
-          {isLoaded &&
-            isForecastAvailable &&
-            this.getTemperatureDataBasedOnUnit(sliderValue, temperatureUnit)}
-        </h1>
         {isLoaded &&
           isForecastAvailable &&
           forecastWeather[sliderValue].windDirDEG && (
@@ -66,7 +61,11 @@ class GeneralData extends Component {
               }}
             />
           )}
-
+        <h1 className={classes.container}>
+          {isLoaded &&
+            isForecastAvailable &&
+            this.getTemperatureDataBasedOnUnit(sliderValue, temperatureUnit)}
+        </h1>
         <h1 className={classes.container}>
           {isLoaded &&
             isForecastAvailable &&
@@ -102,9 +101,9 @@ const styles = createStyles({
   container: {
     color: "#191919",
     fontFamily: "Avenir Next",
-    fontSize: "170%",
+    fontSize: "1.7em",
     display: "inline-block",
-    width: "60%",
+    width: "100%",
     height: "20%",
     textAlign: "left",
     marginBottom: "7%",

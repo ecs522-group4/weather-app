@@ -222,14 +222,18 @@ class LocationSearchbar extends Component {
 const styles = createStyles({
   root: {
     flexGrow: 1,
-    height: 100,
-    width: 250,
-    zIndex: 10
+    zIndex: 10,
+    // Component alignment
+    alignSelf: "flex-end",
+    // Margin of the component
+    margin: "1.2em 0"
   },
   input: {
     display: "flex",
     padding: 0,
-    width: 250
+    right: 0,
+    // Size of the input
+    width: "50vw"
   },
   valueContainer: {
     display: "flex",
