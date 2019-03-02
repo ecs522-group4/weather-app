@@ -84,7 +84,8 @@ class Settings extends Component {
   };
 
   handleChangeWindSpeed = e => {
-    const windSpeed = e.target.value;
+    // Replacing leading zeros with ""
+    const windSpeed = e.target.value.replace(/^0+/, "");
     this.updateWindSpeedValue(windSpeed);
   };
 
@@ -133,7 +134,8 @@ class Settings extends Component {
   };
 
   handleChangeTemperature = e => {
-    const temperature = e.target.value;
+    // Replacing leading zeros with ""
+    const temperature = e.target.value.replace(/^0+/, "");
     this.updateTemperatureValue(temperature);
   };
 
