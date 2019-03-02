@@ -69,7 +69,7 @@ class GeneralData extends Component {
         <h1 className={classes.container}>
           {isLoaded &&
             isForecastAvailable &&
-            forecastWeather[sliderValue].weather}
+            forecastWeather[sliderValue].weatherPrimary}
         </h1>
       </div>
     );
