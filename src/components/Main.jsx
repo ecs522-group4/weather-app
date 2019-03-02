@@ -17,7 +17,7 @@ const KEYS = `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`;
 const OPTIONS_CURRENT = `%format=json&filter=allstations&limit=1&${KEYS}`;
 const OPTIONS_FORECAST = `format=json&filter=1hr&limit=23&${KEYS}`;
 // Requesting only certain data to improve the speed of the response
-const DATA_TO_INCLUDE = `fields=periods.dateTimeISO,periods.tempC,periods.tempF,periods.windDirDEG,periods.windSpeedKTS,periods.windSpeedKPH,periods.windSpeedMPH,periods.weather,periods.isDay`;
+const DATA_TO_INCLUDE = `fields=periods.dateTimeISO,periods.tempC,periods.tempF,periods.windDirDEG,periods.windSpeedKTS,periods.windSpeedKPH,periods.windSpeedMPH,periods.weather,periods.isDay,periods.weatherPrimary`;
 const OPTIONS_CALENDAR_FORECAST = `&to=+day?&format=json&filter=1hr&limit=24&${DATA_TO_INCLUDE}&${KEYS}`;
 class Main extends Component {
   state = {
