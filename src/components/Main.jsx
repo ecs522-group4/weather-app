@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { createStyles, withStyles } from "@material-ui/core/styles";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+
 import MovingKite from "./MovingKite";
 import TopBar from "./TopBar";
 import Settings from "./Settings";
@@ -66,61 +68,63 @@ class Main extends Component {
     } = this.state;
 
     return (
-      <div className={classes.container}>
-        <TopBar
-          isSettingsMenuOpen={isSettingsMenuOpen}
-          onRefresh={this.updateWeatherBasedOnLocation}
-          onCloseSettings={this.closeSettingsMenu}
-          onOpenSettings={this.openSettingsMenu}
-          onSaveSettings={this.saveStateToLocalStorage}
-        />
+      <MuiThemeProvider theme={theme}>
+        <div className={classes.container}>
+          <TopBar
+            isSettingsMenuOpen={isSettingsMenuOpen}
+            onRefresh={this.updateWeatherBasedOnLocation}
+            onCloseSettings={this.closeSettingsMenu}
+            onOpenSettings={this.openSettingsMenu}
+            onSaveSettings={this.saveStateToLocalStorage}
+          />
 
-        {isSettingsMenuOpen === false ? (
-          <>
-            <MovingKite isOkToFly={this.checkIfCanFlyKite()} />
-            <LocationSearchbar
-              onSelectNewCity={this.updateCurrentCity}
-              isValidCity={isValidCity}
-            />
-            <Calendar
-              onChangeDate={this.updateSelectedDate}
-              isForecastAvailable={isForecastAvailable}
-              selectedDate={selectedDate}
-            />
-            <GeneralData
-              isLoaded={isLoaded}
-              currentWeather={currentWeather}
-              forecastWeather={forecastWeather}
+          {isSettingsMenuOpen === false ? (
+            <>
+              <MovingKite isOkToFly={this.checkIfCanFlyKite()} />
+              <LocationSearchbar
+                onSelectNewCity={this.updateCurrentCity}
+                isValidCity={isValidCity}
+              />
+              <Calendar
+                onChangeDate={this.updateSelectedDate}
+                isForecastAvailable={isForecastAvailable}
+                selectedDate={selectedDate}
+              />
+              <GeneralData
+                isLoaded={isLoaded}
+                currentWeather={currentWeather}
+                forecastWeather={forecastWeather}
+                temperatureUnit={temperatureUnit}
+                windSpeedUnit={windSpeedUnit}
+                onChangeSliderValue={this.updateSliderValue}
+                isValidCity={isValidCity}
+                isForecastAvailable={isForecastAvailable}
+                sliderValue={sliderValue}
+              />
+              <WindVisualisation
+                forecastWeather={forecastWeather}
+                isLoaded={isLoaded}
+                windSpeedUnit={windSpeedUnit}
+                isOkToFly={this.checkIfCanFlyKite}
+              />
+            </>
+          ) : (
+            <Settings
               temperatureUnit={temperatureUnit}
               windSpeedUnit={windSpeedUnit}
-              onChangeSliderValue={this.updateSliderValue}
-              isValidCity={isValidCity}
-              isForecastAvailable={isForecastAvailable}
-              sliderValue={sliderValue}
+              minimumWindSpeed={minimumWindSpeed}
+              minimumTemperature={minimumTemperature}
+              onChangeTemperatureUnit={this.changeTemperatureUnit}
+              onChangeSpeedUnit={this.changeSpeedUnit}
+              onChangeTemperature={this.changeminimumTemperature}
+              onChangeWindSpeed={this.changeminimumWindSpeed}
+              listOfToggledOptions={listOfToggledOptions}
+              onToggleOptions={this.updateToggledOptions}
             />
-            <WindVisualisation
-              forecastWeather={forecastWeather}
-              isLoaded={isLoaded}
-              windSpeedUnit={windSpeedUnit}
-              isOkToFly={this.checkIfCanFlyKite}
-            />
-          </>
-        ) : (
-          <Settings
-            temperatureUnit={temperatureUnit}
-            windSpeedUnit={windSpeedUnit}
-            minimumWindSpeed={minimumWindSpeed}
-            minimumTemperature={minimumTemperature}
-            onChangeTemperatureUnit={this.changeTemperatureUnit}
-            onChangeSpeedUnit={this.changeSpeedUnit}
-            onChangeTemperature={this.changeminimumTemperature}
-            onChangeWindSpeed={this.changeminimumWindSpeed}
-            listOfToggledOptions={listOfToggledOptions}
-            onToggleOptions={this.updateToggledOptions}
-          />
-        )}
-        <img className={classes.clouds} src={Clouds} />
-      </div>
+          )}
+          <img className={classes.clouds} src={Clouds} />
+        </div>
+      </MuiThemeProvider>
     );
   }
 
@@ -412,6 +416,15 @@ const styles = createStyles({
     marginBottom: "0%",
     bottom: "0%",
     position: "fixed"
+  }
+});
+
+const theme = createMuiTheme({
+  palette: {
+    type: "dark"
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 
