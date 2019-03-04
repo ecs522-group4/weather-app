@@ -15,7 +15,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #fafafa;
   background-image: url("./assets/backgrounds/main.png");
-  background-size: cover;
+  background-size: auto;
 }
 
 code {

@@ -108,7 +108,8 @@ const styles = createStyles({
     textAlign: "left",
     marginBottom: "7%",
     marginLeft: "10%",
-    top: "60%"
+    top: "60%",
+    color: "white"
   },
   sliderContainer: {
     marginLeft: "10%",
