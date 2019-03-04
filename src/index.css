@@ -21,7 +21,7 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  background-size: auto;
+  height: -webkit-fill-available;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
