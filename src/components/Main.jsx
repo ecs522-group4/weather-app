@@ -340,30 +340,29 @@ class Main extends Component {
     this.setState({ listOfToggledOptions });
   };
 
-  checkIfCanFlyKite = (overrideIndex = this.state.sliderValue) => {
+  checkIfCanFlyKite = (index = this.state.sliderValue) => {
     const {
       minimumWindSpeed,
       minimumTemperature,
       temperatureUnit,
       windSpeedUnit,
       forecastWeather,
-      sliderValue,
       isLoaded,
       listOfToggledOptions
     } = this.state;
     if (isLoaded) {
       const temperature =
         temperatureUnit === "C"
-          ? forecastWeather[overrideIndex].tempC
-          : forecastWeather[overrideIndex].tempF;
+          ? forecastWeather[index].tempC
+          : forecastWeather[index].tempF;
       const windSpeed =
         windSpeedUnit === "KPH"
-          ? forecastWeather[overrideIndex].windSpeedKPH
+          ? forecastWeather[index].windSpeedKPH
           : windSpeedUnit === "MPH"
-          ? forecastWeather[overrideIndex].windSpeedMPH
-          : forecastWeather[overrideIndex].windSpeedKTS;
+          ? forecastWeather[index].windSpeedMPH
+          : forecastWeather[index].windSpeedKTS;
       const flyOnlyDaytime = listOfToggledOptions.includes("daytime");
-      const isDay = forecastWeather[overrideIndex].isDay;
+      const isDay = forecastWeather[index].isDay;
 
       // If user selected the "Fly in daytime only" option, need additional check
       // against isDay
