@@ -241,6 +241,7 @@ class Settings extends Component {
     return (
       <>
         <List
+          className={classes.root}
           subheader={
             <ListSubheader>Optimal weather conditions settings</ListSubheader>
           }
@@ -370,6 +371,9 @@ const styles = createStyles({
     margin: "0 0.5em",
     textAlign: "right",
     textSize: "1.4em"
+  },
+  root: {
+    color: "white"
   }
 });
 

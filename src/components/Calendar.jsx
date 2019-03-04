@@ -4,7 +4,7 @@ import { createStyles, withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
-import LocationOn from "@material-ui/icons/DateRange";
+import DateRange from "@material-ui/icons/DateRange";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 class Calendar extends Component {
@@ -29,9 +29,11 @@ class Calendar extends Component {
                 : "Forecast not available for this date."
             }
             InputProps={{
+              disableUnderline: true,
+              className: classes.text,
               endAdornment: (
                 <InputAdornment>
-                  <LocationOn />
+                  <DateRange className={classes.icon} />
                 </InputAdornment>
               )
             }}
@@ -46,6 +48,12 @@ const styles = createStyles({
     width: "100%",
     zIndex: 5,
     justifyContent: "flex-end"
+  },
+  icon: {
+    color: "white"
+  },
+  text: {
+    color: "white"
   }
 });
 

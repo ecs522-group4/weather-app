@@ -35,6 +35,7 @@ function Control(props) {
       }
       InputProps={{
         inputComponent,
+        disableUnderline: true,
         inputProps: {
           className: props.selectProps.classes.input,
           inputRef: props.innerRef,
@@ -43,7 +44,7 @@ function Control(props) {
         },
         endAdornment: (
           <InputAdornment>
-            <LocationOn />
+            <LocationOn className={props.selectProps.classes.icon} />
           </InputAdornment>
         )
       }}
@@ -278,6 +279,9 @@ const styles = createStyles({
   },
   divider: {
     height: "1px"
+  },
+  icon: {
+    color: "white"
   }
 });
 
