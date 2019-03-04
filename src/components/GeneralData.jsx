@@ -21,6 +21,40 @@ class GeneralData extends Component {
     } = this.props;
     return (
       <div>
+        {!isLoaded && isValidCity && (
+          <div className={classes.loadingContainer}>
+            <CircularProgress />
+          </div>
+        )}
+        {isLoaded &&
+          isForecastAvailable &&
+          forecastWeather[sliderValue].windDirDEG && (
+            <img
+              src={require("../assets/icons/arrow.svg")}
+              alt="arrow indicating wind direction"
+              className={classes.arrowIcon}
+              style={{
+                transform: `rotate(${
+                  forecastWeather[sliderValue].windDirDEG
+                }deg)`
+              }}
+            />
+          )}
+        <h1 className={`${classes.container} ${classes.windSpeedD}`}>
+          {isLoaded &&
+            isForecastAvailable &&
+            this.getWindSpeedDataBasedOnUnit(sliderValue, windSpeedUnit)}
+        </h1>
+        <h1 className={`${classes.container} ${classes.tempD}`}>
+          {isLoaded &&
+            isForecastAvailable &&
+            this.getTemperatureDataBasedOnUnit(sliderValue, temperatureUnit)}
+        </h1>
+        <h1 className={`${classes.container} ${classes.tempDescD}`}>
+          {isLoaded &&
+            isForecastAvailable &&
+            forecastWeather[sliderValue].weatherPrimary}
+        </h1>
         <div className={classes.sliderContainer}>
           {/* the forecastWeather array has 23 elements (0-22 index).
               the slider has a range between 0-23 to allow us to assign the 0
@@ -37,40 +71,6 @@ class GeneralData extends Component {
             onChange={this.handleChange}
           />
         </div>
-        {!isLoaded && isValidCity && (
-          <div className={classes.loadingContainer}>
-            <CircularProgress />
-          </div>
-        )}
-        <h1 className={classes.container}>
-          {isLoaded &&
-            isForecastAvailable &&
-            this.getWindSpeedDataBasedOnUnit(sliderValue, windSpeedUnit)}
-        </h1>
-        {isLoaded &&
-          isForecastAvailable &&
-          forecastWeather[sliderValue].windDirDEG && (
-            <img
-              src={require("../assets/icons/arrow.svg")}
-              alt="arrow indicating wind direction"
-              className={classes.arrowIcon}
-              style={{
-                transform: `rotate(${
-                  forecastWeather[sliderValue].windDirDEG
-                }deg)`
-              }}
-            />
-          )}
-        <h1 className={classes.container}>
-          {isLoaded &&
-            isForecastAvailable &&
-            this.getTemperatureDataBasedOnUnit(sliderValue, temperatureUnit)}
-        </h1>
-        <h1 className={classes.container}>
-          {isLoaded &&
-            isForecastAvailable &&
-            forecastWeather[sliderValue].weatherPrimary}
-        </h1>
       </div>
     );
   }
@@ -99,32 +99,45 @@ class GeneralData extends Component {
 
 const styles = createStyles({
   container: {
+    position: "relative",
     color: "#191919",
-    fontFamily: "Avenir Next",
-    fontSize: "1.7em",
     display: "inline-block",
     width: "100%",
-    height: "20%",
-    textAlign: "left",
-    marginBottom: "7%",
-    marginLeft: "10%",
-    top: "60%",
+    marginTop: "-2%",
+    textAlign: "center",
     color: "white"
   },
   sliderContainer: {
+    position: "relative",
     marginLeft: "10%",
     marginRight: "10%",
-    marginTop: "20%"
+    marginTop: "0%"
   },
   loadingContainer: {
     width: "100%",
     margin: "20px auto"
   },
   arrowIcon: {
-    position: "absolute",
-    right: "20%",
-    width: "10vw",
+    position: "relative",
+    textAlign: "center",
+    width: "12vw",
+    paddingBottom: "-2%",
     height: "10vw"
+  },
+  windSpeedD: {
+    lineHeight: "2%",
+    fontSize: "10vw",
+    marginTop: "15%"
+  },
+  tempD: {
+    marginTop: "2%",
+    fontSize: "17vw",
+    marginBottom: "0%"
+  },
+  tempDescD: {
+    marginTop: "-1%",
+    fontSize: "5vw",
+    marginBottom: "10%"
   }
 });
 
