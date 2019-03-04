@@ -43,7 +43,7 @@ function Control(props) {
         },
         endAdornment: (
           <InputAdornment>
-            <LocationOn />
+            <LocationOn className={props.selectProps.classes.icon} />
           </InputAdornment>
         )
       }}
@@ -278,6 +278,9 @@ const styles = createStyles({
   },
   divider: {
     height: "1px"
+  },
+  icon: {
+    color: "white"
   }
 });
 
