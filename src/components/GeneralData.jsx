@@ -40,17 +40,17 @@ class GeneralData extends Component {
               }}
             />
           )}
-        <h1 className={`${classes.container} ${classes.windSpeedD}`}>
+        <h1 className={`${classes.container} ${classes.windSpeed}`}>
           {isLoaded &&
             isForecastAvailable &&
             this.getWindSpeedDataBasedOnUnit(sliderValue, windSpeedUnit)}
         </h1>
-        <h1 className={`${classes.container} ${classes.tempD}`}>
+        <h1 className={`${classes.container} ${classes.temperature}`}>
           {isLoaded &&
             isForecastAvailable &&
             this.getTemperatureDataBasedOnUnit(sliderValue, temperatureUnit)}
         </h1>
-        <h1 className={`${classes.container} ${classes.tempDescD}`}>
+        <h1 className={`${classes.container} ${classes.weatherDescription}`}>
           {isLoaded &&
             isForecastAvailable &&
             forecastWeather[sliderValue].weatherPrimary}
@@ -124,17 +124,17 @@ const styles = createStyles({
     paddingBottom: "-2%",
     height: "10vw"
   },
-  windSpeedD: {
+  windSpeed: {
     lineHeight: "2%",
     fontSize: "10vw",
     marginTop: "15%"
   },
-  tempD: {
+  temperature: {
     marginTop: "2%",
     fontSize: "17vw",
     marginBottom: "0%"
   },
-  tempDescD: {
+  weatherDescription: {
     marginTop: "-1%",
     fontSize: "5vw",
     marginBottom: "10%"
