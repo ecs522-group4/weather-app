@@ -42,7 +42,9 @@ class TopBar extends Component {
       <>
         <AppBar
           position="static"
-          classes={{ colorPrimary: classes.navBarColour }}
+          classes={{
+            colorPrimary: classes.navBarColour
+          }}
           className={classes.container}
         >
           <Toolbar>
@@ -99,7 +101,7 @@ const styles = createStyles({
     flexGrow: 1
   },
   navBarColour: {
-    backgroundColor: "#061ca3"
+    backgroundColor: "transparent"
   },
   linkToSettings: {
     textDecoration: "none",
@@ -110,7 +112,8 @@ const styles = createStyles({
     display: "flex",
     flexDirection: "column",
     textAlign: "center",
-    margin: "0 auto"
+    margin: "0 auto",
+    boxShadow: "none"
   }
 });
 
