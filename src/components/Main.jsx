@@ -423,6 +423,12 @@ const theme = createMuiTheme({
   palette: {
     type: "dark"
   },
+  overrides: {
+    MuiSlider: {
+      track: { backgroundColor: "white" },
+      thumb: { backgroundColor: "white" }
+    }
+  },
   typography: {
     useNextVariants: true
   }
