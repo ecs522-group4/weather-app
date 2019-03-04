@@ -7,6 +7,7 @@ import GeneralData from "./GeneralData";
 import LocationSearchbar from "./LocationSearchbar";
 import Calendar from "./Calendar";
 import WindVisualisation from "./WindVisualisation";
+import Clouds from "../assets/backgrounds/clouds.png";
 
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
@@ -118,6 +119,7 @@ class Main extends Component {
             onToggleOptions={this.updateToggledOptions}
           />
         )}
+        <img className={classes.clouds} src={Clouds} />
       </div>
     );
   }
@@ -405,6 +407,11 @@ const styles = createStyles({
     textAlign: "center",
     margin: "0 auto",
     maxWidth: 600
+  },
+  clouds: {
+    marginBottom: "0%",
+    bottom: "0%",
+    position: "fixed"
   }
 });
 
