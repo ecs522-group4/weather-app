@@ -4,18 +4,14 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import SettingsIcon from "@material-ui/icons/Settings";
-import RefreshIcon from "@material-ui/icons/Refresh";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import SettingsIcon from "../assets/icons/menu.png";
+import Logo from "../assets/icons/logo.png";
+import ArrowBackIcon from "@material-ui/icons/NavigateBefore";
 import CheckIcon from "@material-ui/icons/Check";
 
 class TopBar extends Component {
   state = {
     isSettingsMenuOpen: false
-  };
-
-  handleClickRefresh = () => {
-    this.props.onRefresh();
   };
 
   handleCloseSettings = () => {
@@ -42,19 +38,17 @@ class TopBar extends Component {
       <>
         <AppBar
           position="static"
-          classes={{ colorPrimary: classes.navBarColour }}
+          classes={{
+            colorPrimary: classes.navBarColour
+          }}
           className={classes.container}
         >
-          <Toolbar>
+          <Toolbar className={classes.toolbar}>
             {/* Conditional rendering based on which component we are rendering
              */}
             {!isSettingsMenuOpen && (
-              <IconButton
-                color="inherit"
-                aria-label="Refresh"
-                onClick={this.handleClickRefresh}
-              >
-                <RefreshIcon />
+              <IconButton color="inherit" aria-label="logo">
+                <img src={Logo} alt="logo" className={classes.leftIcon} />
               </IconButton>
             )}
             {isSettingsMenuOpen && (
@@ -66,16 +60,17 @@ class TopBar extends Component {
                 <ArrowBackIcon />
               </IconButton>
             )}
-            <Typography variant="h6" color="inherit" className={classes.title}>
-              WhetherWind
-            </Typography>
             {!isSettingsMenuOpen && (
               <IconButton
                 color="inherit"
                 aria-label="Settings"
                 onClick={this.handleOpenSettings}
               >
-                <SettingsIcon />
+                <img
+                  src={SettingsIcon}
+                  className={classes.rightIcon}
+                  alt="settings"
+                />
               </IconButton>
             )}
             {isSettingsMenuOpen && (
@@ -99,7 +94,7 @@ const styles = createStyles({
     flexGrow: 1
   },
   navBarColour: {
-    backgroundColor: "#061ca3"
+    backgroundColor: "transparent"
   },
   linkToSettings: {
     textDecoration: "none",
@@ -110,7 +105,19 @@ const styles = createStyles({
     display: "flex",
     flexDirection: "column",
     textAlign: "center",
-    margin: "0 auto"
+    margin: "0 auto",
+    boxShadow: "none"
+  },
+  toolbar: {
+    justifyContent: "space-between"
+  },
+  leftIcon: {
+    width: "1em",
+    flexPosition: "flex-start"
+  },
+  rightIcon: {
+    width: "1em",
+    flexPosition: "flex-end"
   }
 });
 
