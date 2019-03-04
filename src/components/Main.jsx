@@ -82,17 +82,19 @@ class Main extends Component {
               isForecastAvailable={isForecastAvailable}
               selectedDate={selectedDate}
             />
-            <GeneralData
-              isLoaded={isLoaded}
-              currentWeather={currentWeather}
-              forecastWeather={forecastWeather}
-              temperatureUnit={temperatureUnit}
-              windSpeedUnit={windSpeedUnit}
-              onChangeSliderValue={this.updateSliderValue}
-              isValidCity={isValidCity}
-              isForecastAvailable={isForecastAvailable}
-              sliderValue={sliderValue}
-            />
+            <div className={classes.data}>
+              <GeneralData
+                isLoaded={isLoaded}
+                currentWeather={currentWeather}
+                forecastWeather={forecastWeather}
+                temperatureUnit={temperatureUnit}
+                windSpeedUnit={windSpeedUnit}
+                onChangeSliderValue={this.updateSliderValue}
+                isValidCity={isValidCity}
+                isForecastAvailable={isForecastAvailable}
+                sliderValue={sliderValue}
+              />
+            </div>
           </>
         ) : (
           <Settings
@@ -324,6 +326,10 @@ const styles = createStyles({
     textAlign: "center",
     margin: "0 auto",
     maxWidth: 600
+  },
+
+  data: {
+    marginTop: "40%"
   }
 });
 

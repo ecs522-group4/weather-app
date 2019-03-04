@@ -8,11 +8,11 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import LocationOn from "@material-ui/icons/LocationOn";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import LocationIcon from "../assets/icons/pindrop.png";
 
 function NoOptionsMessage(props) {
   return (
     <Typography
-      color="textSecondary"
       className={props.selectProps.classes.noOptionsMessage}
       {...props.innerProps}
     >
@@ -40,12 +40,7 @@ function Control(props) {
           inputRef: props.innerRef,
           children: props.children,
           ...props.innerProps
-        },
-        endAdornment: (
-          <InputAdornment>
-            <LocationOn />
-          </InputAdornment>
-        )
+        }
       }}
       onChange={e => {
         props.selectProps.onTyping(e.target.value);
@@ -199,43 +194,61 @@ class LocationSearchbar extends Component {
     };
 
     return (
-      <div className={classes.root}>
-        <NoSsr>
-          <Select
-            classes={classes}
-            styles={selectStyles}
-            options={this.state.suggestions}
-            components={components}
-            value={this.state.locationQuery}
-            onChange={this.handleSelectNewCity("locationQuery")}
-            placeholder="Select location.."
-            onTyping={this.getCities}
-            onBlur={this.handleBlur}
-            isValidCity={isValidCity}
-          />
-        </NoSsr>
-      </div>
+      <>
+        <div className={classes.root}>
+          <NoSsr>
+            <Select
+              classes={classes}
+              styles={selectStyles}
+              options={this.state.suggestions}
+              components={components}
+              value={this.state.locationQuery}
+              onChange={this.handleSelectNewCity("locationQuery")}
+              placeholder="Select location.."
+              onTyping={this.getCities}
+              onBlur={this.handleBlur}
+              isValidCity={isValidCity}
+            />
+          </NoSsr>
+        </div>
+
+        <img
+          className={classes.icon}
+          src={LocationIcon}
+          onClick={this.handleClickToToggle}
+        />
+      </>
     );
   }
 }
 
 const styles = createStyles({
+  icon: {
+    width: "7%",
+    marginLeft: "89%",
+    position: "fixed",
+    marginTop: "20%"
+  },
   root: {
+    positon: "fixed",
+    marginTop: "20%",
     flexGrow: 1,
     zIndex: 10,
     // Component alignment
     alignSelf: "flex-end",
     // Margin of the component
-    margin: "1.2em 0"
+    margin: "1em "
   },
   input: {
+    positon: "fixed",
     display: "flex",
     padding: 0,
-    right: 0,
+    marginRight: "10vw",
     // Size of the input
-    width: "50vw"
+    width: "40vw"
   },
   valueContainer: {
+    positon: "fixed",
     display: "flex",
     flexWrap: "wrap",
     flex: 1,
@@ -243,24 +256,27 @@ const styles = createStyles({
   },
 
   noOptionsMessage: {
+    positon: "fixed",
     padding: `1px`
   },
   locationQueryValue: {
+    positon: "fixed",
     fontSize: 16
   },
   placeholder: {
-    position: "absolute",
+    positon: "fixed",
     left: 2,
     fontSize: 16
   },
   paper: {
-    position: "absolute",
+    positon: "fixed",
     zIndex: 1,
     marginTop: "1px",
     left: 0,
     right: 0
   },
   divider: {
+    positon: "fixed",
     height: "1px"
   }
 });

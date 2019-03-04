@@ -6,6 +6,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
 import LocationOn from "@material-ui/icons/DateRange";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import CalendarIcon from "../assets/icons/calendar.png";
 
 class Calendar extends Component {
   handleDateChange = date => {
@@ -16,36 +17,41 @@ class Calendar extends Component {
     const { classes, isForecastAvailable, selectedDate } = this.props;
 
     return (
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Grid container className={classes.grid} justify="space-around">
-          <DatePicker
-            margin="normal"
-            value={selectedDate}
-            onChange={this.handleDateChange}
-            error={!isForecastAvailable}
-            helperText={
-              isForecastAvailable
-                ? null
-                : "Forecast not available for this date."
-            }
-            InputProps={{
-              endAdornment: (
-                <InputAdornment>
-                  <LocationOn />
-                </InputAdornment>
-              )
-            }}
-          />
-        </Grid>
-      </MuiPickersUtilsProvider>
+      <>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Grid container className={classes.grid} justify="space-around">
+            <DatePicker
+              margin="normal"
+              value={selectedDate}
+              onChange={this.handleDateChange}
+              error={!isForecastAvailable}
+              helperText={
+                isForecastAvailable
+                  ? null
+                  : "Forecast not available for this date."
+              }
+            />
+          </Grid>
+        </MuiPickersUtilsProvider>
+
+        <img className={classes.icon} src={CalendarIcon} />
+      </>
     );
   }
 }
 const styles = createStyles({
   grid: {
-    width: "100%",
-    zIndex: 5,
+    position: "fixed",
+    maxWidth: "20%",
+    marginLeft: "68vw",
+    marginTop: "33%",
     justifyContent: "flex-end"
+  },
+  icon: {
+    width: "10%",
+    marginLeft: "87%",
+    position: "fixed",
+    marginTop: "35%"
   }
 });
 
