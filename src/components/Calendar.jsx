@@ -30,6 +30,7 @@ class Calendar extends Component {
             }
             InputProps={{
               disableUnderline: true,
+              className: classes.text,
               endAdornment: (
                 <InputAdornment>
                   <DateRange className={classes.icon} />
@@ -49,6 +50,9 @@ const styles = createStyles({
     justifyContent: "flex-end"
   },
   icon: {
+    color: "white"
+  },
+  text: {
     color: "white"
   }
 });
