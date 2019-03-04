@@ -6,6 +6,7 @@ import Settings from "./Settings";
 import GeneralData from "./GeneralData";
 import LocationSearchbar from "./LocationSearchbar";
 import Calendar from "./Calendar";
+import WindVisualisation from "./WindVisualisation";
 
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
@@ -84,6 +85,12 @@ class Main extends Component {
               onChangeDate={this.updateSelectedDate}
               isForecastAvailable={isForecastAvailable}
               selectedDate={selectedDate}
+            />
+            <WindVisualisation
+              forecastWeather={forecastWeather}
+              isLoaded={isLoaded}
+              windSpeedUnit={windSpeedUnit}
+              isOkToFly={this.checkIfCanFlyKite}
             />
             <GeneralData
               isLoaded={isLoaded}
@@ -333,30 +340,29 @@ class Main extends Component {
     this.setState({ listOfToggledOptions });
   };
 
-  checkIfCanFlyKite = () => {
+  checkIfCanFlyKite = (index = this.state.sliderValue) => {
     const {
       minimumWindSpeed,
       minimumTemperature,
       temperatureUnit,
       windSpeedUnit,
       forecastWeather,
-      sliderValue,
       isLoaded,
       listOfToggledOptions
     } = this.state;
     if (isLoaded) {
       const temperature =
         temperatureUnit === "C"
-          ? forecastWeather[sliderValue].tempC
-          : forecastWeather[sliderValue].tempF;
+          ? forecastWeather[index].tempC
+          : forecastWeather[index].tempF;
       const windSpeed =
         windSpeedUnit === "KPH"
-          ? forecastWeather[sliderValue].windSpeedKPH
+          ? forecastWeather[index].windSpeedKPH
           : windSpeedUnit === "MPH"
-          ? forecastWeather[sliderValue].windSpeedMPH
-          : forecastWeather[sliderValue].windSpeedKTS;
+          ? forecastWeather[index].windSpeedMPH
+          : forecastWeather[index].windSpeedKTS;
       const flyOnlyDaytime = listOfToggledOptions.includes("daytime");
-      const isDay = forecastWeather[sliderValue].isDay;
+      const isDay = forecastWeather[index].isDay;
 
       // If user selected the "Fly in daytime only" option, need additional check
       // against isDay
