@@ -6,6 +6,7 @@ import Settings from "./Settings";
 import GeneralData from "./GeneralData";
 import LocationSearchbar from "./LocationSearchbar";
 import Calendar from "./Calendar";
+import WindVisualisation from "./WindVisualisation";
 
 /* --- WEATHER API --- */
 const BASE_URL = "https://api.aerisapi.com";
@@ -17,7 +18,7 @@ const KEYS = `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`;
 const OPTIONS_CURRENT = `%format=json&filter=allstations&limit=1&${KEYS}`;
 const OPTIONS_FORECAST = `format=json&filter=1hr&limit=23&${KEYS}`;
 // Requesting only certain data to improve the speed of the response
-const DATA_TO_INCLUDE = `fields=periods.dateTimeISO,periods.tempC,periods.tempF,periods.windDirDEG,periods.windSpeedKTS,periods.windSpeedKPH,periods.windSpeedMPH,periods.weather,periods.isDay`;
+const DATA_TO_INCLUDE = `fields=periods.dateTimeISO,periods.tempC,periods.tempF,periods.windDirDEG,periods.windSpeedKTS,periods.windSpeedKPH,periods.windSpeedMPH,periods.weatherPrimary,periods.isDay`;
 const OPTIONS_CALENDAR_FORECAST = `&to=+day?&format=json&filter=1hr&limit=24&${DATA_TO_INCLUDE}&${KEYS}`;
 class Main extends Component {
   state = {
@@ -34,14 +35,15 @@ class Main extends Component {
     // Default settings. User can change these in the Settings
     temperatureUnit: "C",
     windSpeedUnit: "KPH",
-    minimumTemperature: 20,
+    minimumTemperature: 10,
     minimumWindSpeed: 15,
     sliderValue: 0,
     currentCity: "",
     isValidCity: true,
     selectedDate: new Date(),
     // Displays an error if users select a day too far in the future
-    isForecastAvailable: true
+    isForecastAvailable: true,
+    listOfToggledOptions: ["daytime"]
   };
 
   render() {
@@ -58,7 +60,8 @@ class Main extends Component {
       isValidCity,
       isForecastAvailable,
       selectedDate,
-      sliderValue
+      sliderValue,
+      listOfToggledOptions
     } = this.state;
 
     return (
@@ -68,6 +71,7 @@ class Main extends Component {
           onRefresh={this.updateWeatherBasedOnLocation}
           onCloseSettings={this.closeSettingsMenu}
           onOpenSettings={this.openSettingsMenu}
+          onSaveSettings={this.saveStateToLocalStorage}
         />
 
         {isSettingsMenuOpen === false ? (
@@ -81,6 +85,12 @@ class Main extends Component {
               onChangeDate={this.updateSelectedDate}
               isForecastAvailable={isForecastAvailable}
               selectedDate={selectedDate}
+            />
+            <WindVisualisation
+              forecastWeather={forecastWeather}
+              isLoaded={isLoaded}
+              windSpeedUnit={windSpeedUnit}
+              isOkToFly={this.checkIfCanFlyKite}
             />
             <GeneralData
               isLoaded={isLoaded}
@@ -104,20 +114,69 @@ class Main extends Component {
             onChangeSpeedUnit={this.changeSpeedUnit}
             onChangeTemperature={this.changeminimumTemperature}
             onChangeWindSpeed={this.changeminimumWindSpeed}
+            listOfToggledOptions={listOfToggledOptions}
+            onToggleOptions={this.updateToggledOptions}
           />
         )}
       </div>
     );
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    // Retrieve data from localStorage
+    this.setStateFromLocalStorage();
     // Fetch weather data as soon as we load the app
-    this.fetchTodayWeather();
+    this.fetchTodayWeather(this.state.currentCity);
+    // add event listener to save state to localStorage  when user
+    // leaves/refreshes the page
+    window.addEventListener("beforeunload", this.saveStateToLocalStorage);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener("beforeunload", this.saveStateToLocalStorage);
+    // saves if component has a chance to unmount
+    this.saveStateToLocalStorage();
+  }
+
+  // Retrieve data from localStorage and update state or use defaul values
+  setStateFromLocalStorage = () => {
+    const storedData = JSON.parse(localStorage.getItem("whetherwind")) || null;
+    // Update state only if data is available
+    if (storedData) {
+      const temperatureUnit = storedData.temperatureUnit || "C";
+      const windSpeedUnit = storedData.windSpeedUnit || "KPH";
+      const minimumTemperature = storedData.minimumTemperature || 10;
+      const minimumWindSpeed = storedData.minimumWindSpeed || 15;
+      const currentCity = storedData.currentCity || "London, UK";
+      const listOfToggledOptions = storedData.toggledOptions || ["daytime"];
+
+      this.setState({
+        temperatureUnit,
+        windSpeedUnit,
+        minimumTemperature,
+        minimumWindSpeed,
+        currentCity,
+        listOfToggledOptions
+      });
+    }
+  };
+
+  // Save data we want to store in the localStorage
+  saveStateToLocalStorage = () => {
+    const dataToStore = {
+      temperatureUnit: this.state.temperatureUnit,
+      windSpeedUnit: this.state.windSpeedUnit,
+      minimumTemperature: this.state.minimumTemperature,
+      minimumWindSpeed: this.state.minimumWindSpeed,
+      currentCity: this.state.currentCity,
+      toggledOptions: this.state.listOfToggledOptions
+    };
+    localStorage.setItem("whetherwind", JSON.stringify(dataToStore));
+  };
 
   // This function queries the API, and if we receive a valid response we tidy
   // it up and store it in the state
-  fetchTodayWeather = async currentCity => {
+  fetchTodayWeather = currentCity => {
     this.setState({ isLoaded: false });
     let currentWeather;
     let location;
@@ -157,7 +216,7 @@ class Main extends Component {
               windGustKPH: result.response.ob.windGustKPH,
               windGustMPH: result.response.ob.windGustMPH,
               weather: result.response.ob.weather,
-              weatherShort: result.response.ob.weatherShort,
+              weatherPrimary: result.response.ob.weatherPrimary,
               windchillC: result.response.ob.windchillC,
               windchillF: result.response.ob.windchillF,
               feelsLikeC: result.response.ob.feelsLikeC,
@@ -191,7 +250,7 @@ class Main extends Component {
       });
   };
 
-  fetchAnyDateWeather = async (currentCity, date) => {
+  fetchAnyDateWeather = (currentCity, date) => {
     this.setState({ isLoaded: false, isForecastAvailable: true });
     let location;
     // If no city specified by the users
@@ -227,7 +286,7 @@ class Main extends Component {
 
   // This function retrieves Users' position, then updates the state with the
   // GPS data and queries the API.
-  updateWeatherBasedOnLocation = async () => {
+  updateWeatherBasedOnLocation = () => {
     navigator.geolocation.getCurrentPosition(
       pos => {
         this.setState({ lat: pos.coords.latitude, long: pos.coords.longitude });
@@ -277,32 +336,54 @@ class Main extends Component {
     }
   };
 
-  checkIfCanFlyKite = () => {
+  updateToggledOptions = listOfToggledOptions => {
+    this.setState({ listOfToggledOptions });
+  };
+
+  checkIfCanFlyKite = (index = this.state.sliderValue) => {
     const {
       minimumWindSpeed,
       minimumTemperature,
       temperatureUnit,
       windSpeedUnit,
       forecastWeather,
-      sliderValue,
-      isLoaded
+      isLoaded,
+      listOfToggledOptions
     } = this.state;
     if (isLoaded) {
       const temperature =
         temperatureUnit === "C"
-          ? forecastWeather[sliderValue].tempC
-          : forecastWeather[sliderValue].tempF;
+          ? forecastWeather[index].tempC
+          : forecastWeather[index].tempF;
       const windSpeed =
         windSpeedUnit === "KPH"
-          ? forecastWeather[sliderValue].windSpeedKPH
+          ? forecastWeather[index].windSpeedKPH
           : windSpeedUnit === "MPH"
-          ? forecastWeather[sliderValue].windSpeedMPH
-          : forecastWeather[sliderValue].windSpeedKTS;
+          ? forecastWeather[index].windSpeedMPH
+          : forecastWeather[index].windSpeedKTS;
+      const flyOnlyDaytime = listOfToggledOptions.includes("daytime");
+      const isDay = forecastWeather[index].isDay;
 
-      if (temperature >= minimumTemperature && windSpeed >= minimumWindSpeed) {
-        return true;
+      // If user selected the "Fly in daytime only" option, need additional check
+      // against isDay
+      if (flyOnlyDaytime) {
+        if (
+          temperature >= minimumTemperature &&
+          windSpeed >= minimumWindSpeed &&
+          isDay
+        ) {
+          return true;
+        }
+        return false;
+      } else {
+        if (
+          temperature >= minimumTemperature &&
+          windSpeed >= minimumWindSpeed
+        ) {
+          return true;
+        }
+        return false;
       }
-      return false;
     }
   };
 

@@ -20,12 +20,19 @@ class TopBar extends Component {
 
   handleCloseSettings = () => {
     this.props.onCloseSettings();
+    // Also save when close settings so that the LocationSearchbar shows
+    // the current session's city, not the saved one from last session
+    this.props.onSaveSettings();
     this.setState({ isSettingsMenuOpen: false });
   };
 
   handleOpenSettings = () => {
     this.props.onOpenSettings();
     this.setState({ isSettingsMenuOpen: true });
+  };
+
+  handleSaveSettings = () => {
+    this.props.onSaveSettings();
   };
 
   render() {
@@ -72,7 +79,11 @@ class TopBar extends Component {
               </IconButton>
             )}
             {isSettingsMenuOpen && (
-              <IconButton color="inherit" aria-label="Save">
+              <IconButton
+                color="inherit"
+                aria-label="Save"
+                onClick={this.handleSaveSettings}
+              >
                 <CheckIcon />
               </IconButton>
             )}

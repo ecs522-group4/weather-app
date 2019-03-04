@@ -37,13 +37,15 @@ class Settings extends Component {
       temperatureUnit,
       windSpeedUnit,
       minimumWindSpeed,
-      minimumTemperature
+      minimumTemperature,
+      listOfToggledOptions
     } = this.props;
     this.setState({
       temperatureUnit,
       windSpeedUnit,
       windSpeed: minimumWindSpeed,
-      temperature: minimumTemperature
+      temperature: minimumTemperature,
+      checked: listOfToggledOptions
     });
   };
 
@@ -53,6 +55,7 @@ class Settings extends Component {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
+    // Add or remove from array based on toggle status
     if (currentIndex === -1) {
       newChecked.push(value);
     } else {
@@ -62,24 +65,21 @@ class Settings extends Component {
     this.setState({
       checked: newChecked
     });
+
+    this.props.onToggleOptions(newChecked);
   };
 
-  handleDecreaseWindSpeed = () => {
+  handleChangeWindSpeedWithButton = operation => () => {
     const { windSpeed } = this.state;
-    const newSpeed = parseInt(windSpeed) - 1;
-    this.updateWindSpeedValue(newSpeed);
-    this.props.onChangeWindSpeed(newSpeed);
-  };
-
-  handleIncreaseWindSpeed = () => {
-    const { windSpeed } = this.state;
-    const newSpeed = parseInt(windSpeed) + 1;
+    const newSpeed =
+      operation === "add" ? parseInt(windSpeed) + 1 : parseInt(windSpeed) - 1;
     this.updateWindSpeedValue(newSpeed);
     this.props.onChangeWindSpeed(newSpeed);
   };
 
   handleChangeWindSpeed = e => {
-    const windSpeed = e.target.value;
+    // Replacing leading zeros with ""
+    const windSpeed = e.target.value.replace(/^0+/, "");
     this.updateWindSpeedValue(windSpeed);
   };
 
@@ -113,22 +113,19 @@ class Settings extends Component {
     }
   };
 
-  handleDecreaseTemperature = () => {
+  handleChangeTemperatureWithButton = operation => () => {
     const { temperature } = this.state;
-    const newTemperature = parseInt(temperature) - 1;
-    this.updateTemperatureValue(newTemperature);
-    this.props.onChangeTemperature(newTemperature);
-  };
-
-  handleIncreaseTemperature = () => {
-    const { temperature } = this.state;
-    const newTemperature = parseInt(temperature) + 1;
+    const newTemperature =
+      operation === "add"
+        ? parseInt(temperature) + 1
+        : parseInt(temperature) - 1;
     this.updateTemperatureValue(newTemperature);
     this.props.onChangeTemperature(newTemperature);
   };
 
   handleChangeTemperature = e => {
-    const temperature = e.target.value;
+    // Replacing leading zeros with ""
+    const temperature = e.target.value.replace(/^0+/, "");
     this.updateTemperatureValue(temperature);
   };
 
@@ -269,7 +266,10 @@ class Settings extends Component {
               }
             />
             <ListItemSecondaryAction>
-              <RemoveIcon size="small" onClick={this.handleDecreaseWindSpeed} />
+              <RemoveIcon
+                size="small"
+                onClick={this.handleChangeWindSpeedWithButton("subtract")}
+              />
               {/* onFocus will select all the text. We need blur to remove the
                selection in case the user don't type anything after focussing*/}
               <InputBase
@@ -283,7 +283,10 @@ class Settings extends Component {
                 }}
                 className={classes.windSpeed}
               />
-              <AddIcon size="small" onClick={this.handleIncreaseWindSpeed} />
+              <AddIcon
+                size="small"
+                onClick={this.handleChangeWindSpeedWithButton("add")}
+              />
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem>
@@ -298,7 +301,7 @@ class Settings extends Component {
             <ListItemSecondaryAction>
               <RemoveIcon
                 size="small"
-                onClick={this.handleDecreaseTemperature}
+                onClick={this.handleChangeTemperatureWithButton("subtract")}
               />
               <InputBase
                 type="number"
@@ -311,7 +314,10 @@ class Settings extends Component {
                 }}
                 className={classes.windSpeed}
               />
-              <AddIcon size="small" onClick={this.handleIncreaseTemperature} />
+              <AddIcon
+                size="small"
+                onClick={this.handleChangeTemperatureWithButton("add")}
+              />
             </ListItemSecondaryAction>
           </ListItem>
         </List>
