@@ -35,6 +35,7 @@ function Control(props) {
       }
       InputProps={{
         inputComponent,
+        disableUnderline: true,
         inputProps: {
           className: props.selectProps.classes.input,
           inputRef: props.innerRef,

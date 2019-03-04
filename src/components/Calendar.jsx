@@ -29,6 +29,7 @@ class Calendar extends Component {
                 : "Forecast not available for this date."
             }
             InputProps={{
+              disableUnderline: true,
               endAdornment: (
                 <InputAdornment>
                   <DateRange className={classes.icon} />
