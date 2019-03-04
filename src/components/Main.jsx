@@ -86,12 +86,6 @@ class Main extends Component {
               isForecastAvailable={isForecastAvailable}
               selectedDate={selectedDate}
             />
-            <WindVisualisation
-              forecastWeather={forecastWeather}
-              isLoaded={isLoaded}
-              windSpeedUnit={windSpeedUnit}
-              isOkToFly={this.checkIfCanFlyKite}
-            />
             <GeneralData
               isLoaded={isLoaded}
               currentWeather={currentWeather}
@@ -102,6 +96,12 @@ class Main extends Component {
               isValidCity={isValidCity}
               isForecastAvailable={isForecastAvailable}
               sliderValue={sliderValue}
+            />
+            <WindVisualisation
+              forecastWeather={forecastWeather}
+              isLoaded={isLoaded}
+              windSpeedUnit={windSpeedUnit}
+              isOkToFly={this.checkIfCanFlyKite}
             />
           </>
         ) : (
