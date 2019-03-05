@@ -209,9 +209,14 @@ class LocationSearchbar extends Component {
     const selectStyles = {
       input: base => ({
         ...base,
+        color: "#fff",
         "& input": {
           font: "inherit"
         }
+      }),
+      singleValue: base => ({
+        ...base,
+        color: "#fff"
       })
     };
 
