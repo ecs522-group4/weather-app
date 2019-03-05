@@ -6,8 +6,8 @@ class WindVisualisation extends Component {
 
   componentDidMount = () => {
     // Initialise the canvas:
-    const ctx = this.refs.canvas.getContext("2d");
-    this.setState({ context: this.refs.canvas.getContext("2d") });
+    const context = this.refs.canvas.getContext("2d");
+    this.setState({ context });
   };
 
   componentDidUpdate = () => {
@@ -63,7 +63,6 @@ class WindVisualisation extends Component {
       context.font = "14px Helvetica";
       // Drawing the wind speed numbers on canvas
       let maxWind = this.findMaxWind(windSpeedUnit);
-      console.log("Maximum wind speed: " + maxWind);
       let speedY = 165;
       let canvasUnit = "0";
       for (let i = 0; i <= 2; i++) {
