@@ -23,7 +23,7 @@ class GeneralData extends Component {
       <div>
         {!isLoaded && isValidCity && (
           <div className={classes.loadingContainer}>
-            <CircularProgress />
+            <CircularProgress size={50} className={classes.loadingIcon} />
           </div>
         )}
         {isLoaded &&
@@ -115,6 +115,9 @@ const styles = createStyles({
   loadingContainer: {
     width: "100%",
     margin: "20px auto"
+  },
+  loadingIcon: {
+    color: "white"
   },
   arrowIcon: {
     position: "relative",

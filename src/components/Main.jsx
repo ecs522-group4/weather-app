@@ -250,7 +250,7 @@ class Main extends Component {
                   const forecastWeather = result.response[0].periods;
                   // Adding the currentWeather at the beginning of the forecast array
                   forecastWeather.unshift(currentWeather);
-                  this.setState({ forecastWeather, isLoaded: true });
+                  this.setState({ forecastWeather, isLoaded: false });
                 }
               });
           } else {
@@ -438,6 +438,16 @@ const theme = createMuiTheme({
     // Align calendar text
     MuiInputBase: {
       input: { textAlign: "center" }
+    },
+    MuiCircularProgress: {
+      root: {
+        // Position it at the center of the screen
+        position: "absolute",
+        left: "calc(50vw - 25px)",
+        top: "calc(50vh - 25px)",
+        // On top of every other component
+        zIndex: 20
+      }
     }
   },
   // Needed as soon the old typography will be deprecated
