@@ -11,7 +11,7 @@ class WindVisualisation extends Component {
   };
 
   componentDidUpdate = () => {
-    this.state.context.clearRect(0, 0, 375, 200);
+    this.state.context.clearRect(0, 0, 305, 190);
     this.drawAllComponents();
   };
 
@@ -214,7 +214,7 @@ class WindVisualisation extends Component {
   };
 
   render() {
-    return <canvas ref="canvas" width={375} height={200} />;
+    return <canvas ref="canvas" width={305} height={190} />;
   }
 }
 
