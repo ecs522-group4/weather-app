@@ -122,7 +122,7 @@ class Main extends Component {
               onToggleOptions={this.updateToggledOptions}
             />
           )}
-          <img className={classes.clouds} src={Clouds} />
+          <img className={classes.clouds} src={Clouds} alt="clouds" />
         </div>
       </MuiThemeProvider>
     );
