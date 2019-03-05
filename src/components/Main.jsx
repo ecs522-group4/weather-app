@@ -131,8 +131,6 @@ class Main extends Component {
   componentDidMount() {
     // Retrieve data from localStorage
     this.setStateFromLocalStorage();
-    // Fetch weather data as soon as we load the app
-    this.fetchTodayWeather(this.state.currentCity);
     // add event listener to save state to localStorage  when user
     // leaves/refreshes the page
     window.addEventListener("beforeunload", this.saveStateToLocalStorage);
@@ -156,14 +154,21 @@ class Main extends Component {
       const currentCity = storedData.currentCity || "London, UK";
       const listOfToggledOptions = storedData.toggledOptions || ["daytime"];
 
-      this.setState({
-        temperatureUnit,
-        windSpeedUnit,
-        minimumTemperature,
-        minimumWindSpeed,
-        currentCity,
-        listOfToggledOptions
-      });
+      this.setState(
+        {
+          temperatureUnit,
+          windSpeedUnit,
+          minimumTemperature,
+          minimumWindSpeed,
+          currentCity,
+          listOfToggledOptions
+        },
+        () => {
+          // Fetch weather after we set the state, to make sure it's the right
+          // city.
+          this.fetchTodayWeather(this.state.currentCity);
+        }
+      );
     }
   };
 
