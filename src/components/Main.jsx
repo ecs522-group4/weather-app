@@ -100,13 +100,14 @@ class Main extends Component {
                 isValidCity={isValidCity}
                 isForecastAvailable={isForecastAvailable}
                 sliderValue={sliderValue}
-              />
-              <WindVisualisation
-                forecastWeather={forecastWeather}
-                isLoaded={isLoaded}
-                windSpeedUnit={windSpeedUnit}
-                isOkToFly={this.checkIfCanFlyKite}
-              />
+              >
+                <WindVisualisation
+                  forecastWeather={forecastWeather}
+                  isLoaded={isLoaded}
+                  windSpeedUnit={windSpeedUnit}
+                  isOkToFly={this.checkIfCanFlyKite}
+                />
+              </GeneralData>
             </>
           ) : (
             <Settings

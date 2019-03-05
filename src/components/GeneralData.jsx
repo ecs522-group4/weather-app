@@ -61,6 +61,7 @@ class GeneralData extends Component {
               to the currentWeather, and the remaning 1-23 to forecastWeather.
               However, we need to change the range from 1-23 to 0-22.
               (sliderValue - 1) */}
+          {this.props.children}
           <Slider
             classes={{ container: classes.slider }}
             min={0}
