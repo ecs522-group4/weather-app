@@ -109,8 +109,8 @@ const styles = createStyles({
   },
   sliderContainer: {
     position: "relative",
-    marginLeft: "10%",
-    marginRight: "10%",
+    marginLeft: "14vw",
+    marginRight: "20vw",
     marginTop: "0%"
   },
   loadingContainer: {
