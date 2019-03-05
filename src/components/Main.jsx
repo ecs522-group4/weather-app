@@ -250,7 +250,7 @@ class Main extends Component {
                   const forecastWeather = result.response[0].periods;
                   // Adding the currentWeather at the beginning of the forecast array
                   forecastWeather.unshift(currentWeather);
-                  this.setState({ forecastWeather, isLoaded: false });
+                  this.setState({ forecastWeather, isLoaded: true });
                 }
               });
           } else {
