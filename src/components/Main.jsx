@@ -420,15 +420,22 @@ const styles = createStyles({
 });
 
 const theme = createMuiTheme({
+  // Change the whole app palette
   palette: {
     type: "dark"
   },
   overrides: {
+    // Style the slider
     MuiSlider: {
       track: { backgroundColor: "white" },
       thumb: { backgroundColor: "white" }
+    },
+    // Align calendar text
+    MuiInputBase: {
+      input: { textAlign: "center" }
     }
   },
+  // Needed as soon the old typography will be deprecated
   typography: {
     useNextVariants: true
   }

@@ -206,12 +206,27 @@ class LocationSearchbar extends Component {
   render() {
     const { classes, isValidCity } = this.props;
 
+    // Use this to further personalise react-select component.
+    // Visit its website for more information.
     const selectStyles = {
+      // Style of the input (i.e. when user is typing)
       input: base => ({
         ...base,
+        color: "#fff",
         "& input": {
           font: "inherit"
         }
+      }),
+      // Style of the selected value
+      singleValue: base => ({
+        ...base,
+        color: "#fff",
+        // Center the selected value
+        width: "-webkit-fill-available"
+      }),
+      // Style of the line between text and dropdown arrow
+      indicatorSeparator: base => ({
+        color: "transparent"
       })
     };
 
@@ -242,8 +257,8 @@ const styles = createStyles({
     zIndex: 10,
     // Component alignment
     alignSelf: "flex-end",
-    // Margin of the component
-    margin: "1.2em 0"
+    // 6.5 view width to be in line with settings icon
+    margin: "1.2em 6.5vw 0"
   },
   input: {
     display: "flex",
@@ -255,8 +270,7 @@ const styles = createStyles({
   valueContainer: {
     display: "flex",
     flexWrap: "wrap",
-    flex: 1,
-    alignItems: "center"
+    flex: 1
   },
 
   noOptionsMessage: {
