@@ -100,12 +100,11 @@ class GeneralData extends Component {
 const styles = createStyles({
   container: {
     position: "relative",
-    color: "#191919",
+    color: "white",
     display: "inline-block",
     width: "100%",
     marginTop: "-2%",
-    textAlign: "center",
-    color: "white"
+    textAlign: "center"
   },
   sliderContainer: {
     position: "relative",
