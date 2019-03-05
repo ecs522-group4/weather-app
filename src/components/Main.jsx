@@ -425,10 +425,6 @@ const styles = createStyles({
 });
 
 const theme = createMuiTheme({
-  // Change the whole app palette
-  palette: {
-    type: "dark"
-  },
   overrides: {
     // Style the slider
     MuiSlider: {
@@ -437,7 +433,9 @@ const theme = createMuiTheme({
     },
     // Align calendar text
     MuiInputBase: {
-      input: { textAlign: "center" }
+      input: { textAlign: "center" },
+      // Change number selector (temp and wind speed) color
+      root: { color: "white" }
     },
     MuiCircularProgress: {
       root: {
@@ -447,6 +445,21 @@ const theme = createMuiTheme({
         top: "calc(50vh - 25px)",
         // On top of every other component
         zIndex: 20
+      }
+    },
+    MuiTypography: {
+      // Change settings options colour
+      body1: {
+        color: "white"
+      },
+      colorTextSecondary: {
+        color: "white"
+      }
+    },
+    // Settings header colour
+    MuiListSubheader: {
+      root: {
+        color: "white"
       }
     }
   },
