@@ -26,7 +26,8 @@ class WindVisualisation extends Component {
     const { isLoaded } = this.props;
     if (isLoaded) {
       // Drawing the hours (dynamical, from now to 24 hours later) on canvas
-      context.font = "11px Helvetica";
+      context.font = "12px Helvetica";
+      context.fillStyle = "white";
       let date = new Date();
       let hour = date.getHours();
       let xHourCoord = 36;
@@ -88,7 +89,9 @@ class WindVisualisation extends Component {
         case "KPH":
           for (let i = 0; i < 23; i++) {
             context.beginPath();
-            context.strokeStyle = isOkToFly(i) ? "#51c928" : "#000000";
+            context.strokeStyle = isOkToFly(i)
+              ? "rgb(63, 198, 79, 0.4)"
+              : "rgb(255, 255, 255, 0.3)";
             yCoord = Math.floor(
               165 - 130 / (maximumUnit / forecastWeather[i].windSpeedKPH)
             );
@@ -100,15 +103,24 @@ class WindVisualisation extends Component {
                 165 - 130 / (maximumUnit / forecastWeather[i + 1].windSpeedKPH)
               )
             );
-            context.stroke();
+            context.lineTo(windXCoord, 165);
+            windXCoord -= 12;
+            context.lineTo(windXCoord, 165);
+            context.lineTo(windXCoord, yCoord);
+            windXCoord += 12;
+            context.fillStyle = context.strokeStyle;
+            context.fill();
             context.closePath();
+            context.stroke();
           }
 
           break;
         case "KTS":
           for (let i = 0; i < 23; i++) {
             context.beginPath();
-            context.strokeStyle = isOkToFly(i) ? "#51c928" : "#000000";
+            context.strokeStyle = isOkToFly(i)
+              ? "rgb(63, 198, 79, 0.4)"
+              : "rgb(255, 255, 255, 0.3)";
             yCoord = Math.floor(
               165 - 130 / (maximumUnit / forecastWeather[i].windSpeedKTS)
             );
@@ -120,14 +132,23 @@ class WindVisualisation extends Component {
                 165 - 130 / (maximumUnit / forecastWeather[i + 1].windSpeedKTS)
               )
             );
-            context.stroke();
+            context.lineTo(windXCoord, 165);
+            windXCoord -= 12;
+            context.lineTo(windXCoord, 165);
+            context.lineTo(windXCoord, yCoord);
+            windXCoord += 12;
+            context.fillStyle = context.strokeStyle;
+            context.fill();
             context.closePath();
+            context.stroke();
           }
           break;
         case "MPH":
           for (let i = 0; i < 23; i++) {
             context.beginPath();
-            context.strokeStyle = isOkToFly(i) ? "#51c928" : "#000000";
+            context.strokeStyle = isOkToFly(i)
+              ? "rgb(63, 198, 79, 0.4)"
+              : "rgb(255, 255, 255, 0.3)";
             yCoord = Math.floor(
               165 - 130 / (maximumUnit / forecastWeather[i].windSpeedMPH)
             );
@@ -139,8 +160,15 @@ class WindVisualisation extends Component {
                 165 - 130 / (maximumUnit / forecastWeather[i + 1].windSpeedMPH)
               )
             );
-            context.stroke();
+            context.lineTo(windXCoord, 165);
+            windXCoord -= 12;
+            context.lineTo(windXCoord, 165);
+            context.lineTo(windXCoord, yCoord);
+            windXCoord += 12;
+            context.fillStyle = context.strokeStyle;
+            context.fill();
             context.closePath();
+            context.stroke();
           }
           break;
         default:
