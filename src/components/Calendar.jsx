@@ -6,6 +6,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
 import DateRange from "@material-ui/icons/DateRange";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import calendar from '../assets/icons/calendar.png';
 
 class Calendar extends Component {
   handleDateChange = date => {
@@ -16,6 +17,7 @@ class Calendar extends Component {
     const { classes, isForecastAvailable, selectedDate } = this.props;
 
     return (
+      <div>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <Grid container className={classes.grid}>
           <DatePicker
@@ -31,15 +33,14 @@ class Calendar extends Component {
             InputProps={{
               disableUnderline: true,
               className: classes.text,
-              endAdornment: (
-                <InputAdornment>
-                  <DateRange className={classes.icon} />
-                </InputAdornment>
-              )
+
             }}
           />
         </Grid>
       </MuiPickersUtilsProvider>
+
+      <img className={classes.icon} src={calendar} />
+      </div>
     );
   }
 }
@@ -53,7 +54,11 @@ const styles = createStyles({
     right: "6.5vw"
   },
   icon: {
-    color: "white"
+    width: "2.5em",
+    flexPosition: "flex-end",
+    marginRight: "5%",
+    float: "right",
+    marginTop: "-13%"
   },
   text: {
     color: "white"
