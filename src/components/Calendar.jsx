@@ -17,7 +17,7 @@ class Calendar extends Component {
 
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Grid container className={classes.grid} justify="space-around">
+        <Grid container className={classes.grid}>
           <DatePicker
             margin="normal"
             value={selectedDate}
@@ -47,7 +47,10 @@ const styles = createStyles({
   grid: {
     width: "100%",
     zIndex: 5,
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    // Moving it 6.5vw to the left to be aligned with settings and location
+    position: "relative",
+    right: "6.5vw"
   },
   icon: {
     color: "white"
