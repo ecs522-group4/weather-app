@@ -128,6 +128,7 @@ const styles = createStyles({
     height: "10vw"
   },
   windSpeed: {
+    fontFamily: "CaviarDreams",
     lineHeight: "2%",
     fontSize: "10vw",
     marginTop: "15%"
@@ -140,7 +141,8 @@ const styles = createStyles({
   weatherDescription: {
     marginTop: "-1%",
     fontSize: "5vw",
-    marginBottom: "10%"
+    marginBottom: "10%",
+    fontFamily: "Open Sans Light !important"
   }
 });
 
