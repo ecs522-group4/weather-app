@@ -6,7 +6,7 @@ import NoSsr from "@material-ui/core/NoSsr";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
-import LocationOn from "@material-ui/icons/LocationOn";
+import LocationOn from "@material-ui/icons/Navigation";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 function NoOptionsMessage(props) {
@@ -258,14 +258,14 @@ const styles = createStyles({
     // Component alignment
     alignSelf: "flex-end",
     // 6.5 view width to be in line with settings icon
-    margin: "1.2em 6.5vw 0"
+    margin: "0em 7vw 0"
   },
   input: {
     display: "flex",
     padding: 0,
     right: 0,
     // Size of the input
-    width: "50vw"
+    width: "28vw"
   },
   valueContainer: {
     display: "flex",
@@ -295,7 +295,9 @@ const styles = createStyles({
     height: "1px"
   },
   icon: {
-    color: "white"
+    color: "white",
+    opacity: "0.9"
+
   }
 });
 

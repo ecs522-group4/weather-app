@@ -4,9 +4,9 @@ import { createStyles, withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
-import DateRange from "@material-ui/icons/DateRange";
+import CalendarToday from "@material-ui/icons/CalendarToday";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import calendar from '../assets/icons/calendar.png';
+
 
 class Calendar extends Component {
   handleDateChange = date => {
@@ -17,7 +17,7 @@ class Calendar extends Component {
     const { classes, isForecastAvailable, selectedDate } = this.props;
 
     return (
-      <div>
+
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <Grid container className={classes.grid}>
           <DatePicker
@@ -33,35 +33,35 @@ class Calendar extends Component {
             InputProps={{
               disableUnderline: true,
               className: classes.text,
-
+              endAdornment: (
+                <InputAdornment>
+                  <CalendarToday className={classes.icon} />
+                </InputAdornment>
+              )
             }}
           />
         </Grid>
       </MuiPickersUtilsProvider>
-
-      <img className={classes.icon} src={calendar} />
-      </div>
     );
   }
 }
 const styles = createStyles({
   grid: {
-    width: "100%",
+    width: "32%",
     zIndex: 5,
     justifyContent: "flex-end",
-    // Moving it 6.5vw to the left to be aligned with settings and location
+    // Moving it 61vw to the right to be aligned with settings and location
     position: "relative",
-    right: "6.5vw"
+    left: "61vw"
   },
   icon: {
-    width: "2.5em",
-    flexPosition: "flex-end",
-    marginRight: "5%",
-    float: "right",
-    marginTop: "-13%"
+    opacity: "0.9",
   },
   text: {
-    color: "white"
+    color: "white",
+
+
+
   }
 });
 
