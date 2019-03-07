@@ -50,7 +50,8 @@ const styles = createStyles({
     justifyContent: "flex-end",
     // Moving it 6.5vw to the left to be aligned with settings and location
     position: "relative",
-    right: "6.5vw"
+    right: "6.5vw",
+    top: "-3vh"
   },
   icon: {
     color: "white"

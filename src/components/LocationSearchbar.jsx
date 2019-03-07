@@ -258,7 +258,7 @@ const styles = createStyles({
     // Component alignment
     alignSelf: "flex-end",
     // 6.5 view width to be in line with settings icon
-    margin: "1.2em 6.5vw 0"
+    margin: "0 6.5vw 0"
   },
   input: {
     display: "flex",
