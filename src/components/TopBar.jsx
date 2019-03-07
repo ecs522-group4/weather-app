@@ -37,6 +37,7 @@ class TopBar extends Component {
       <>
         <AppBar
           position="static"
+          variant="dense"
           classes={{
             colorPrimary: classes.navBarColour
           }}

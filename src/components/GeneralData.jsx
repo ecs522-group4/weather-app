@@ -55,13 +55,13 @@ class GeneralData extends Component {
             isForecastAvailable &&
             forecastWeather[sliderValue].weatherPrimary}
         </h1>
+        {this.props.children}
         <div className={classes.sliderContainer}>
           {/* the forecastWeather array has 23 elements (0-22 index).
               the slider has a range between 0-23 to allow us to assign the 0
               to the currentWeather, and the remaning 1-23 to forecastWeather.
               However, we need to change the range from 1-23 to 0-22.
               (sliderValue - 1) */}
-          {this.props.children}
           <Slider
             classes={{ container: classes.slider }}
             min={0}
@@ -109,8 +109,8 @@ const styles = createStyles({
   },
   sliderContainer: {
     position: "relative",
-    marginLeft: "10%",
-    marginRight: "10%",
+    marginLeft: "14vw",
+    marginRight: "8vw",
     marginTop: "0%"
   },
   loadingContainer: {

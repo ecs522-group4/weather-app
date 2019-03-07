@@ -258,7 +258,7 @@ const styles = createStyles({
     // Component alignment
     alignSelf: "flex-end",
     // 6.5 view width to be in line with settings icon
-    margin: "0em 7vw 0"
+    margin: "0 6.5vw 0"
   },
   input: {
     display: "flex",
@@ -274,7 +274,8 @@ const styles = createStyles({
   },
 
   noOptionsMessage: {
-    padding: `1px`
+    padding: `1px`,
+    color: "black"
   },
   locationQueryValue: {
     fontSize: 16
@@ -297,7 +298,6 @@ const styles = createStyles({
   icon: {
     color: "white",
     opacity: "0.9"
-
   }
 });
 

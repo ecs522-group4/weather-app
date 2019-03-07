@@ -105,6 +105,7 @@ class Main extends Component {
                   forecastWeather={forecastWeather}
                   isLoaded={isLoaded}
                   windSpeedUnit={windSpeedUnit}
+                  sliderValue={sliderValue}
                   isOkToFly={this.checkIfCanFlyKite}
                 />
               </GeneralData>

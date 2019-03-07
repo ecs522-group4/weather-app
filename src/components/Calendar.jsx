@@ -7,7 +7,6 @@ import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
 import CalendarToday from "@material-ui/icons/CalendarToday";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
-
 class Calendar extends Component {
   handleDateChange = date => {
     this.props.onChangeDate(date);
@@ -17,7 +16,6 @@ class Calendar extends Component {
     const { classes, isForecastAvailable, selectedDate } = this.props;
 
     return (
-
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <Grid container className={classes.grid}>
           <DatePicker
@@ -52,16 +50,14 @@ const styles = createStyles({
     justifyContent: "flex-end",
     // Moving it 61vw to the right to be aligned with settings and location
     position: "relative",
-    left: "61vw"
+    right: "6.5vw",
+    top: "-3vh"
   },
   icon: {
-    opacity: "0.9",
+    opacity: "0.9"
   },
   text: {
-    color: "white",
-
-
-
+    color: "white"
   }
 });
 
