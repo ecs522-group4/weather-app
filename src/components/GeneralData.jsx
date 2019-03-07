@@ -28,7 +28,7 @@ class GeneralData extends Component {
         )}
         {isLoaded &&
           isForecastAvailable &&
-          forecastWeather[sliderValue].windDirDEG && (
+          forecastWeather[sliderValue].windDirDEG !== null && (
             <img
               src={require("../assets/icons/arrow.svg")}
               alt="arrow indicating wind direction"
