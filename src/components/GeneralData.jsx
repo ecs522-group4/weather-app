@@ -121,7 +121,8 @@ const styles = createStyles({
     position: "relative",
     marginLeft: "14vw",
     marginRight: "15vw",
-    marginTop: "0%"
+    marginTop: "0%",
+    top: "-0.4in"
   },
   loadingContainer: {
     width: "100%",
