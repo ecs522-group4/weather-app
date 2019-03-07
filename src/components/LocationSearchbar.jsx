@@ -6,7 +6,7 @@ import NoSsr from "@material-ui/core/NoSsr";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
-import LocationOn from "@material-ui/icons/LocationOn";
+import Navigation from "@material-ui/icons/Navigation";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 function NoOptionsMessage(props) {
@@ -44,7 +44,7 @@ function Control(props) {
         },
         endAdornment: (
           <InputAdornment>
-            <LocationOn className={props.selectProps.classes.icon} />
+            <Navigation className={props.selectProps.classes.icon} />
           </InputAdornment>
         )
       }}
