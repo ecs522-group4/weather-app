@@ -115,7 +115,7 @@ class WindVisualisation extends Component {
           break;
         case "KTS":
           unitSpeed = "windSpeedKTS";
-          break;
+        break;
         default:
           break;
       }
