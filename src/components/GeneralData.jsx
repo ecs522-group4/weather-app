@@ -28,7 +28,7 @@ class GeneralData extends Component {
         )}
         {isLoaded &&
           isForecastAvailable &&
-          forecastWeather[sliderValue].windDirDEG && (
+          forecastWeather[sliderValue].windDirDEG !== null && (
             <img
               src={require("../assets/icons/arrow.svg")}
               alt="arrow indicating wind direction"
@@ -157,8 +157,9 @@ const styles = createStyles({
   },
   timeBasedOnSlider: {
     position: "relative",
-    top: "-4vh",
-    fontSize: "20px"
+    top: "0.25in",
+    fontSize: "16px",
+    right: "-1.5in"
   }
 });
 
