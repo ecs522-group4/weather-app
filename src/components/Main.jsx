@@ -430,8 +430,8 @@ const theme = createMuiTheme({
   overrides: {
     // Style the slider
     MuiSlider: {
-      track: { backgroundColor: "white" },
-      thumb: { backgroundColor: "white" }
+      track: { backgroundColor: "#68bcff" },
+      thumb: { backgroundColor: "#68bcff" }
     },
     // Align calendar text
     MuiInputBase: {
