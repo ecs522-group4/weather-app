@@ -55,6 +55,9 @@ class GeneralData extends Component {
             isForecastAvailable &&
             forecastWeather[sliderValue].weatherPrimary}
         </h1>
+        <h1 className={`${classes.container} ${classes.timeBasedOnSlider}`}>
+          {isLoaded && isForecastAvailable && this.getHourBasedOnSlider()}
+        </h1>
         {this.props.children}
         <div className={classes.sliderContainer}>
           {/* the forecastWeather array has 23 elements (0-22 index).
@@ -95,6 +98,13 @@ class GeneralData extends Component {
     return unit === "F"
       ? `${forecastWeather[sliderValue].tempF} °F`
       : `${forecastWeather[sliderValue].tempC} °C`;
+  };
+  getHourBasedOnSlider = () => {
+    const { forecastWeather, sliderValue } = this.props;
+    const time = new Date(forecastWeather[sliderValue].dateTimeISO);
+    const hours =
+      time.getHours() < 10 ? `0${time.getHours()}` : time.getHours();
+    return `${hours}:00`;
   };
 }
 
@@ -143,6 +153,11 @@ const styles = createStyles({
     fontSize: "5vw",
     marginBottom: "10%",
     fontFamily: "Open Sans Light !important"
+  },
+  timeBasedOnSlider: {
+    position: "relative",
+    top: "-4vh",
+    fontSize: "20px"
   }
 });
 
