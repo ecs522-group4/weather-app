@@ -10,6 +10,7 @@ class WindVisualisation extends Component {
     this.setState({ context });
   };
 
+  // On component update, refresh the canvas content
   componentDidUpdate = () => {
     this.state.context.clearRect(0, 0, 375, 200);
     this.drawAllComponents();
@@ -17,42 +18,52 @@ class WindVisualisation extends Component {
 
   drawAllComponents = () => {
     this.drawUnits();
-
     this.drawWind();
   };
 
+  // Draw the dynamic units (y represents wind speed and x represent time)
   drawUnits = () => {
     const { context } = this.state;
     const { isLoaded } = this.props;
+    const HOURS_TO_DISPLAY = 8;
     if (isLoaded) {
       // Drawing the hours (dynamical, from now to 24 hours later) on canvas
       context.font = "12px Helvetica";
       context.fillStyle = "white";
       let date = new Date();
       let hour = date.getHours();
-      let xHourCoord = 36;
-      for (let i = 0; i < 9; i++) {
+      // Adjust x coordinate depending to the window size so that the graph
+      // is suitable for any mobile screen size
+      let xHourCoord = Math.floor(window.innerWidth / 10);
+      for (let i = 0; i < HOURS_TO_DISPLAY; i++) {
         let tempHour = hour;
+        // Add a 0 at the beginning if the hour has only one digit
         if (hour.toString().length === 1) {
           tempHour = "0" + hour.toString();
         }
         context.fillText(tempHour, xHourCoord, 190);
-        xHourCoord += 36;
+        xHourCoord += Math.floor(window.innerWidth / 10);
+        // Normalise hours to the 00-24 range, taking into account we are
+        // jumping by three hours
         if (hour > 20) {
           hour = hour - 21;
         } else {
           hour += 3;
         }
       }
-      // Drawing the time unit on the canvas
-      context.font = "17px Helvetica";
-      context.fillText("hr", 346, 191);
       context.beginPath();
     }
   };
 
+  // Draw the actual graph
   drawWind = () => {
-    const { forecastWeather, isLoaded, windSpeedUnit, isOkToFly } = this.props;
+    const {
+      forecastWeather,
+      isLoaded,
+      windSpeedUnit,
+      isOkToFly,
+      sliderValue
+    } = this.props;
     const { context } = this.state;
 
     if (isLoaded) {
@@ -80,23 +91,29 @@ class WindVisualisation extends Component {
         }
       }
       // Drawing the WindVisualisation
-      let windXCoord = 36;
+      let windXCoord = Math.floor(window.innerWidth / 10);
       let maximumUnit = Math.floor(maxWind / 10) + 1;
       maximumUnit = maximumUnit.toString() + "0";
       maximumUnit = parseInt(maximumUnit);
       let yCoord;
+      let opacity = "0.3)";
       switch (windSpeedUnit) {
         case "KPH":
           for (let i = 0; i < 23; i++) {
+            if (i === sliderValue) {
+              opacity = "0.8)";
+            } else if (i !== sliderValue && opacity === "0.8)") {
+              opacity = "0.3)";
+            }
             context.beginPath();
             context.strokeStyle = isOkToFly(i)
-              ? "rgb(63, 198, 79, 0.4)"
-              : "rgb(255, 255, 255, 0.3)";
+              ? "rgb(63, 198, 79, " + opacity
+              : "rgb(255, 255, 255, " + opacity;
             yCoord = Math.floor(
               165 - 130 / (maximumUnit / forecastWeather[i].windSpeedKPH)
             );
             context.moveTo(windXCoord, yCoord);
-            windXCoord += 12;
+            windXCoord += Math.floor(window.innerWidth / 28.5);
             context.lineTo(
               windXCoord,
               Math.floor(
@@ -104,10 +121,10 @@ class WindVisualisation extends Component {
               )
             );
             context.lineTo(windXCoord, 165);
-            windXCoord -= 12;
+            windXCoord -= Math.floor(window.innerWidth / 28.5);
             context.lineTo(windXCoord, 165);
             context.lineTo(windXCoord, yCoord);
-            windXCoord += 12;
+            windXCoord += Math.floor(window.innerWidth / 28.5);
             context.fillStyle = context.strokeStyle;
             context.fill();
             context.closePath();
@@ -117,15 +134,20 @@ class WindVisualisation extends Component {
           break;
         case "KTS":
           for (let i = 0; i < 23; i++) {
+            if (i === sliderValue) {
+              opacity = "0.8)";
+            } else if (i !== sliderValue && opacity === "0.8)") {
+              opacity = "0.3)";
+            }
             context.beginPath();
             context.strokeStyle = isOkToFly(i)
-              ? "rgb(63, 198, 79, 0.4)"
-              : "rgb(255, 255, 255, 0.3)";
+              ? "rgb(63, 198, 79, " + opacity
+              : "rgb(255, 255, 255, " + opacity;
             yCoord = Math.floor(
               165 - 130 / (maximumUnit / forecastWeather[i].windSpeedKTS)
             );
             context.moveTo(windXCoord, yCoord);
-            windXCoord += 12;
+            windXCoord += Math.floor(window.innerWidth / 28.5);
             context.lineTo(
               windXCoord,
               Math.floor(
@@ -133,10 +155,10 @@ class WindVisualisation extends Component {
               )
             );
             context.lineTo(windXCoord, 165);
-            windXCoord -= 12;
+            windXCoord -= Math.floor(window.innerWidth / 28.5);
             context.lineTo(windXCoord, 165);
             context.lineTo(windXCoord, yCoord);
-            windXCoord += 12;
+            windXCoord += Math.floor(window.innerWidth / 28.5);
             context.fillStyle = context.strokeStyle;
             context.fill();
             context.closePath();
@@ -145,15 +167,20 @@ class WindVisualisation extends Component {
           break;
         case "MPH":
           for (let i = 0; i < 23; i++) {
+            if (i === sliderValue) {
+              opacity = "0.8)";
+            } else if (i !== sliderValue && opacity === "0.8)") {
+              opacity = "0.3)";
+            }
             context.beginPath();
             context.strokeStyle = isOkToFly(i)
-              ? "rgb(63, 198, 79, 0.4)"
-              : "rgb(255, 255, 255, 0.3)";
+              ? "rgb(63, 198, 79, " + opacity
+              : "rgb(255, 255, 255, " + opacity;
             yCoord = Math.floor(
               165 - 130 / (maximumUnit / forecastWeather[i].windSpeedMPH)
             );
             context.moveTo(windXCoord, yCoord);
-            windXCoord += 12;
+            windXCoord += Math.floor(window.innerWidth / 28.5);
             context.lineTo(
               windXCoord,
               Math.floor(
@@ -161,10 +188,10 @@ class WindVisualisation extends Component {
               )
             );
             context.lineTo(windXCoord, 165);
-            windXCoord -= 12;
+            windXCoord -= Math.floor(window.innerWidth / 28.5);
             context.lineTo(windXCoord, 165);
             context.lineTo(windXCoord, yCoord);
-            windXCoord += 12;
+            windXCoord += Math.floor(window.innerWidth / 28.5);
             context.fillStyle = context.strokeStyle;
             context.fill();
             context.closePath();
@@ -177,6 +204,8 @@ class WindVisualisation extends Component {
     }
   };
 
+  // Find the maximum value of the wind speed for the forecast. This way, we can
+  // dynamically set the Y axis values in the graph
   findMaxWind = speedUnit => {
     const { forecastWeather, isLoaded } = this.props;
     if (isLoaded) {
@@ -214,7 +243,9 @@ class WindVisualisation extends Component {
   };
 
   render() {
-    return <canvas ref="canvas" width={375} height={200} />;
+    let windowWidth = window.innerWidth - 20;
+
+    return <canvas ref="canvas" width={windowWidth} height={200} />;
   }
 }
 
