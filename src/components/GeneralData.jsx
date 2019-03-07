@@ -157,8 +157,9 @@ const styles = createStyles({
   },
   timeBasedOnSlider: {
     position: "relative",
-    top: "-4vh",
-    fontSize: "20px"
+    top: "0.25in",
+    fontSize: "16px",
+    right: "-1.5in"
   }
 });
 
