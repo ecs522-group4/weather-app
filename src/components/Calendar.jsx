@@ -4,7 +4,7 @@ import { createStyles, withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
-import DateRange from "@material-ui/icons/DateRange";
+import CalendarToday from "@material-ui/icons/CalendarToday";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 class Calendar extends Component {
@@ -33,7 +33,7 @@ class Calendar extends Component {
               className: classes.text,
               endAdornment: (
                 <InputAdornment>
-                  <DateRange className={classes.icon} />
+                  <CalendarToday className={classes.icon} />
                 </InputAdornment>
               )
             }}
