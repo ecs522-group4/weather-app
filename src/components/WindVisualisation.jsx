@@ -12,7 +12,8 @@ class WindVisualisation extends Component {
 
   // On component update, refresh the canvas content
   componentDidUpdate = () => {
-    this.state.context.clearRect(0, 0, 375, 200);
+    let windowWidth = window.innerWidth - 20;
+    this.state.context.clearRect(0, 0, windowWidth, 200);
     this.drawAllComponents();
   };
 
@@ -25,7 +26,7 @@ class WindVisualisation extends Component {
   drawUnits = () => {
     const { context } = this.state;
     const { isLoaded } = this.props;
-    const HOURS_TO_DISPLAY = 8;
+    const HOURS_TO_DISPLAY = 9;
     if (isLoaded) {
       // Drawing the hours (dynamical, from now to 24 hours later) on canvas
       context.font = "12px Helvetica";
@@ -99,7 +100,7 @@ class WindVisualisation extends Component {
       let opacity = "0.3)";
       switch (windSpeedUnit) {
         case "KPH":
-          for (let i = 0; i < 23; i++) {
+          for (let i = 0; i <= 23; i++) {
             if (i === sliderValue) {
               opacity = "0.8)";
             } else if (i !== sliderValue && opacity === "0.8)") {
@@ -114,12 +115,26 @@ class WindVisualisation extends Component {
             );
             context.moveTo(windXCoord, yCoord);
             windXCoord += Math.floor(window.innerWidth / 28.5);
-            context.lineTo(
-              windXCoord,
-              Math.floor(
-                165 - 130 / (maximumUnit / forecastWeather[i + 1].windSpeedKPH)
-              )
-            );
+
+            if (i === 23) {
+              context.lineTo(
+                windXCoord,
+                Math.floor(
+                  165 - 130 / (maximumUnit / forecastWeather[i].windSpeedKPH)
+                )
+              );
+            }
+
+            if (i !== 23) {
+              context.lineTo(
+                windXCoord,
+                Math.floor(
+                  165 -
+                    130 / (maximumUnit / forecastWeather[i + 1].windSpeedKPH)
+                )
+              );
+            }
+
             context.lineTo(windXCoord, 165);
             windXCoord -= Math.floor(window.innerWidth / 28.5);
             context.lineTo(windXCoord, 165);
@@ -133,7 +148,7 @@ class WindVisualisation extends Component {
 
           break;
         case "KTS":
-          for (let i = 0; i < 23; i++) {
+          for (let i = 0; i <= 23; i++) {
             if (i === sliderValue) {
               opacity = "0.8)";
             } else if (i !== sliderValue && opacity === "0.8)") {
@@ -148,12 +163,25 @@ class WindVisualisation extends Component {
             );
             context.moveTo(windXCoord, yCoord);
             windXCoord += Math.floor(window.innerWidth / 28.5);
-            context.lineTo(
-              windXCoord,
-              Math.floor(
-                165 - 130 / (maximumUnit / forecastWeather[i + 1].windSpeedKTS)
-              )
-            );
+
+            if (i === 23) {
+              context.lineTo(
+                windXCoord,
+                Math.floor(
+                  165 - 130 / (maximumUnit / forecastWeather[i].windSpeedKTS)
+                )
+              );
+            }
+
+            if (i !== 23) {
+              context.lineTo(
+                windXCoord,
+                Math.floor(
+                  165 -
+                    130 / (maximumUnit / forecastWeather[i + 1].windSpeedKTS)
+                )
+              );
+            }
             context.lineTo(windXCoord, 165);
             windXCoord -= Math.floor(window.innerWidth / 28.5);
             context.lineTo(windXCoord, 165);
@@ -166,7 +194,7 @@ class WindVisualisation extends Component {
           }
           break;
         case "MPH":
-          for (let i = 0; i < 23; i++) {
+          for (let i = 0; i <= 23; i++) {
             if (i === sliderValue) {
               opacity = "0.8)";
             } else if (i !== sliderValue && opacity === "0.8)") {
@@ -181,12 +209,24 @@ class WindVisualisation extends Component {
             );
             context.moveTo(windXCoord, yCoord);
             windXCoord += Math.floor(window.innerWidth / 28.5);
-            context.lineTo(
-              windXCoord,
-              Math.floor(
-                165 - 130 / (maximumUnit / forecastWeather[i + 1].windSpeedMPH)
-              )
-            );
+            if (i === 23) {
+              context.lineTo(
+                windXCoord,
+                Math.floor(
+                  165 - 130 / (maximumUnit / forecastWeather[i].windSpeedMPH)
+                )
+              );
+            }
+
+            if (i !== 23) {
+              context.lineTo(
+                windXCoord,
+                Math.floor(
+                  165 -
+                    130 / (maximumUnit / forecastWeather[i + 1].windSpeedMPH)
+                )
+              );
+            }
             context.lineTo(windXCoord, 165);
             windXCoord -= Math.floor(window.innerWidth / 28.5);
             context.lineTo(windXCoord, 165);
