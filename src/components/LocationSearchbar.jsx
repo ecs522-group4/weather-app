@@ -274,7 +274,8 @@ const styles = createStyles({
   },
 
   noOptionsMessage: {
-    padding: `1px`
+    padding: `1px`,
+    color: "black"
   },
   locationQueryValue: {
     fontSize: 16
