@@ -216,7 +216,7 @@ class Main extends Component {
               placeName: result.response.place.name,
               cityName: result.response.place.city,
               countryName: result.response.place.country,
-              dateTime: result.response.obDateTime,
+              dateTimeISO: result.response.obDateTime,
               tempC: result.response.ob.tempC,
               tempF: result.response.ob.tempF,
               humidity: result.response.ob.humidity,
