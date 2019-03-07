@@ -73,13 +73,14 @@ class WindVisualisation extends Component {
     const { context } = this.state;
 
     if (isLoaded) {
-      // Drawing the speed and time units on the canvas
+      // Drawing the speed and time units on canvas
       context.font = "16px Helvetica";
       context.fillText(windSpeedUnit, 5, 12);
       context.fillText("hr", window.innerWidth - 65, 190);
       context.beginPath();
       context.font = "14px Helvetica";
-      // Drawing the wind speed numbers on canvas
+      // Drawing the wind speed numbers on canvas (value are chosen dynamically
+      // depending on the maximum speed value during next 24 hours)
       let maxWind = this.findMaxWind(windSpeedUnit);
       let speedY = 165;
       let canvasUnit = "0";
@@ -104,148 +105,64 @@ class WindVisualisation extends Component {
       maximumUnit = parseInt(maximumUnit);
       let yCoord;
       let opacity = "0.3)";
+      let unitSpeed;
       switch (windSpeedUnit) {
         case "KPH":
-          for (let i = 0; i <= 23; i++) {
-            if (i === sliderValue) {
-              opacity = "0.8)";
-            } else if (i !== sliderValue && opacity === "0.8)") {
-              opacity = "0.3)";
-            }
-            context.beginPath();
-            context.strokeStyle = isOkToFly(i)
-              ? "rgb(63, 198, 79, " + opacity
-              : "rgb(255, 255, 255, " + opacity;
-            yCoord = Math.floor(
-              165 - 130 / (maximumUnit / forecastWeather[i].windSpeedKPH)
-            );
-            context.moveTo(windXCoord, yCoord);
-            windXCoord += Math.floor(window.innerWidth / 32);
-
-            if (i === 23) {
-              context.lineTo(
-                windXCoord,
-                Math.floor(
-                  165 - 130 / (maximumUnit / forecastWeather[i].windSpeedKPH)
-                )
-              );
-            }
-
-            if (i !== 23) {
-              context.lineTo(
-                windXCoord,
-                Math.floor(
-                  165 -
-                    130 / (maximumUnit / forecastWeather[i + 1].windSpeedKPH)
-                )
-              );
-            }
-
-            context.lineTo(windXCoord, 165);
-            windXCoord -= Math.floor(window.innerWidth / 32);
-            context.lineTo(windXCoord, 165);
-            context.lineTo(windXCoord, yCoord);
-            windXCoord += Math.floor(window.innerWidth / 32);
-            context.fillStyle = context.strokeStyle;
-            context.fill();
-            context.closePath();
-            context.stroke();
-          }
-
-          break;
-        case "KTS":
-          for (let i = 0; i <= 23; i++) {
-            if (i === sliderValue) {
-              opacity = "0.8)";
-            } else if (i !== sliderValue && opacity === "0.8)") {
-              opacity = "0.3)";
-            }
-            context.beginPath();
-            context.strokeStyle = isOkToFly(i)
-              ? "rgb(63, 198, 79, " + opacity
-              : "rgb(255, 255, 255, " + opacity;
-            yCoord = Math.floor(
-              165 - 130 / (maximumUnit / forecastWeather[i].windSpeedKTS)
-            );
-            context.moveTo(windXCoord, yCoord);
-            windXCoord += Math.floor(window.innerWidth / 32);
-
-            if (i === 23) {
-              context.lineTo(
-                windXCoord,
-                Math.floor(
-                  165 - 130 / (maximumUnit / forecastWeather[i].windSpeedKTS)
-                )
-              );
-            }
-
-            if (i !== 23) {
-              context.lineTo(
-                windXCoord,
-                Math.floor(
-                  165 -
-                    130 / (maximumUnit / forecastWeather[i + 1].windSpeedKTS)
-                )
-              );
-            }
-            context.lineTo(windXCoord, 165);
-            windXCoord -= Math.floor(window.innerWidth / 32);
-            context.lineTo(windXCoord, 165);
-            context.lineTo(windXCoord, yCoord);
-            windXCoord += Math.floor(window.innerWidth / 32);
-            context.fillStyle = context.strokeStyle;
-            context.fill();
-            context.closePath();
-            context.stroke();
-          }
+          unitSpeed = "windSpeedKPH";
           break;
         case "MPH":
-          for (let i = 0; i <= 23; i++) {
-            if (i === sliderValue) {
-              opacity = "0.8)";
-            } else if (i !== sliderValue && opacity === "0.8)") {
-              opacity = "0.3)";
-            }
-            context.beginPath();
-            context.strokeStyle = isOkToFly(i)
-              ? "rgb(63, 198, 79, " + opacity
-              : "rgb(255, 255, 255, " + opacity;
-            yCoord = Math.floor(
-              165 - 130 / (maximumUnit / forecastWeather[i].windSpeedMPH)
-            );
-            context.moveTo(windXCoord, yCoord);
-            windXCoord += Math.floor(window.innerWidth / 32);
-            if (i === 23) {
-              context.lineTo(
-                windXCoord,
-                Math.floor(
-                  165 - 130 / (maximumUnit / forecastWeather[i].windSpeedMPH)
-                )
-              );
-            }
-
-            if (i !== 23) {
-              context.lineTo(
-                windXCoord,
-                Math.floor(
-                  165 -
-                    130 / (maximumUnit / forecastWeather[i + 1].windSpeedMPH)
-                )
-              );
-            }
-            context.lineTo(windXCoord, 165);
-            windXCoord -= Math.floor(window.innerWidth / 32);
-            context.lineTo(windXCoord, 165);
-            context.lineTo(windXCoord, yCoord);
-            windXCoord += Math.floor(window.innerWidth / 32);
-            context.fillStyle = context.strokeStyle;
-            context.fill();
-            context.closePath();
-            context.stroke();
-          }
+          unitSpeed = "windSpeedMPH";
           break;
+        case "KTS":
+          unitSpeed = "windSpeedKTS";
+        break;
         default:
           break;
+      }
+
+      // Representing each hour on the wind speed visualisation
+      for (let i = 0; i <= 23; i++) {
+        if (i === sliderValue) {
+          opacity = "0.8)";
+        } else if (i !== sliderValue && opacity === "0.8)") {
+          opacity = "0.3)";
+        }
+        context.beginPath();
+        context.strokeStyle = isOkToFly(i)
+          ? "rgb(63, 198, 79, " + opacity
+          : "rgb(255, 255, 255, " + opacity;
+        yCoord = Math.floor(
+          165 - 130 / (maximumUnit / forecastWeather[i][unitSpeed])
+        );
+        context.moveTo(windXCoord, yCoord);
+        windXCoord += Math.floor(window.innerWidth / 32);
+
+        if (i === 23) {
+          context.lineTo(
+            windXCoord,
+            Math.floor(
+              165 - 130 / (maximumUnit / forecastWeather[i][unitSpeed])
+            )
+          );
+        }
+
+        if (i !== 23) {
+          context.lineTo(
+            windXCoord,
+            Math.floor(
+              165 - 130 / (maximumUnit / forecastWeather[i + 1][unitSpeed])
+            )
+          );
+        }
+        context.lineTo(windXCoord, 165);
+        windXCoord -= Math.floor(window.innerWidth / 32);
+        context.lineTo(windXCoord, 165);
+        context.lineTo(windXCoord, yCoord);
+        windXCoord += Math.floor(window.innerWidth / 32);
+        context.fillStyle = context.strokeStyle;
+        context.fill();
+        context.closePath();
+        context.stroke();
       }
     }
   };
@@ -256,33 +173,25 @@ class WindVisualisation extends Component {
     const { forecastWeather, isLoaded } = this.props;
     if (isLoaded) {
       let maxWind = 0;
+      let unit;
       switch (speedUnit) {
         case "KPH":
-          maxWind = forecastWeather[0].windSpeedKPH;
-          for (let x = 1; x <= 23; x++) {
-            if (forecastWeather[x].windSpeedKPH > maxWind) {
-              maxWind = forecastWeather[x].windSpeedKPH;
-            }
-          }
-          break;
-        case "KTS":
-          maxWind = forecastWeather[0].windSpeedKTS;
-          for (let x = 1; x <= 23; x++) {
-            if (forecastWeather[x].windSpeedKTS > maxWind) {
-              maxWind = forecastWeather[x].windSpeedKTS;
-            }
-          }
+          unit = "windSpeedKPH";
           break;
         case "MPH":
-          maxWind = forecastWeather[0].windSpeedMPH;
-          for (let x = 1; x <= 23; x++) {
-            if (forecastWeather[x].windSpeedMPH > maxWind) {
-              maxWind = forecastWeather[x].windSpeedMPH;
-            }
-          }
+          unit = "windSpeedMPH";
+          break;
+        case "KTS":
+          unit = "windSpeedKTS";
           break;
         default:
           break;
+      }
+      maxWind = forecastWeather[0][unit];
+      for (let x = 1; x <= 23; x++) {
+        if (forecastWeather[x][unit] > maxWind) {
+          maxWind = forecastWeather[x][unit];
+        }
       }
       return maxWind;
     }
