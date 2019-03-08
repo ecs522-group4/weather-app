@@ -38,3 +38,9 @@ Frameworks used:
 - Node.js
 - AerisWeather API
 - Material-UI
+
+
+## Screenshots
+White areas on the wind visualisation and grey kite represent times when you cannot fly a kite. When the graph area becomes green, the kite changes colours and it signifies that the weather is suitable for kite flying.
+![weather](https://user-images.githubusercontent.com/17802955/54031224-0d98b900-41a6-11e9-974a-e88b5084e586.jpg)
+
